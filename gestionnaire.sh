@@ -22,8 +22,18 @@
 
 # On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
 
-# FEATURES
+# FIN MENY
+
+# DEBUT FEATURES
 
 # voir : less
-# éditer : 
+# éditer : nano  
+# générer : séparer compilation avec g++ -o et linkage puis chmod 700 l'exécutable
+# lancer : lance l'exécutable
+# débugguer : compiler le programme en mode débug 
+# imprimer : transformer en pdf puis a2ps ou un print
+# shell :
+# envoyer par mail 
+# quitter : 
 
+# FIN FEATURES
