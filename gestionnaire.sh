@@ -28,7 +28,7 @@ continuer=true # un simple booléen
 reponse=""
 
 
-ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 | cut -d'.' -f 1 | tail -n +2 > temp
+ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" > temp
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
@@ -91,7 +91,7 @@ else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y 
    exit 1
 fi
 
-rm -f temp 
+#rm -f temp 
 
 ## $# est le nombre de paramètres passés au script
 
