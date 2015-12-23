@@ -1,10 +1,26 @@
 #!/bin/bash
 
+#### CODE : un # est un commentaire normal
+####        deux # est une note
+
+
+
 # DEBUT INTRO
 
 clear
 
-# Si il ny dargument, on fait un ls des .cpp du répertoir
+
+# Si il ny pas dargument, on fait un ls des .cpp du répertoir
+
+if [ $# -eq 0 ]
+then
+    echo "il n'y a pas d'argument"
+else 
+   echo "il y a des arguments"
+fi
+
+## $# est le nombre de paramètres passés au script
+
 #     Si il y a des .cpp
 #         on demande à lutilisateur decrire le nom du fichier .cpp.
 #     Sinon (sil ny a pas de .cpp après ce ls, on utilise le TEMPLATE)
