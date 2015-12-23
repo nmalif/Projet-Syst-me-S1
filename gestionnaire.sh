@@ -42,7 +42,7 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
               read fictoedit
               echo "Êtes-vous sûr ?"
               read reponse
-              if [ $reponse = 'oui' ]
+              if [ $reponse = 'oui' ] || [ $reponse = 'Oui' ]
               then
                   continuer=false
               fi
