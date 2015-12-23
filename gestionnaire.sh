@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 #### CODE : un # est un commentaire normal
 ####        deux # est une note
@@ -14,7 +14,7 @@ clear
 
 if [ $# -eq 0 ]
 then
-    echo "il n'y a pas d'argument"
+   ls -l | tail -n +2 | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 
 else 
    echo "il y a des arguments"
 fi
