@@ -3,7 +3,20 @@
 #### CODE : un # est un commentaire normal
 ####        deux # est une note
 
-
+maketemplate()
+{  
+    touch template.cpp 
+    echo "#include <iostream>" > template.cpp
+    echo "#include <cstdlib>" >> template.cpp
+    echo " " >> template.cpp
+    echo "using namespace std;" >> template.cpp
+    echo " " >> template.cpp
+    echo "int main(int argc, char *argv[])" >> template.cpp
+    echo "{" >> template.cpp
+    echo "    cout << \"Hello World !\" << endl;" >> template.cpp
+    echo "    return EXIT_SUCCESS;" >> template.cpp
+    echo "}" >> template.cpp
+}
 
 # DEBUT INTRO
 
@@ -24,6 +37,7 @@ then
       cat temp
       echo " "
       echo -n "Ecrire le nom du fichier source c++ à manipuler : "
+      # puis on demande a lutilisateur decrire le nom du fichier quil veut manipuler
       while $continuer
          do
             read fictoedit
@@ -43,9 +57,7 @@ fi
 
 ## $# est le nombre de paramètres passés au script
 
-#     Si il y a des .cpp
-#         on demande à lutilisateur decrire le nom du fichier .cpp.
-#     Sinon (sil ny a pas de .cpp après ce ls, on utilise le TEMPLATE)
+
  
 # Sinon sil y a un argument
 #     on regarde si l'argument fini par .cpp.
