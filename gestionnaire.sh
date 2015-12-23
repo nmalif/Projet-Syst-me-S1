@@ -25,40 +25,41 @@ clear
 fictoedit=""
 continuer=true
 
+ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 | cut -d'.' -f 1 | tail -n +2 > temp
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
-   ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 | cut -d'.' -f 1 | tail -n +2 > temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
    then
       echo "Il n'y a pas de .cpp."
       echo "Template automatiquement crée !"
       maketemplate
    else # sinon on les montre
-      echo "Voici les fichiers sources c++ du répertoire :"
-      echo " "
-      cat temp
-      echo " "
-      echo -n "Ecrire le nom du fichier source c++ à manipuler : "
-      # puis on demande a l'utilisateur decrire le nom du fichier quil veut manipuler
       while $continuer
-         do
-            read fictoedit
-            if [ $(grep -cx $fictoedit temp) != 0 ] # Cela veut dire que l'utilisateur a écrit un nom qui existait 
-            then 
-               continuer=false
-            else
-               echo "Ce fichier n'existe pas, réessayer s'il vous plait"
-            fi 
-         done
+          do
+              clear
+              echo "Voici les fichiers sources c++ du répertoire :"
+              echo " "
+              cat temp
+              echo " "
+              echo -n "Ecrire le nom du fichier source c++ à manipuler : "
+              # puis on demande a l'utilisateur decrire le nom du fichier quil veut manipuler
+              read fictoedit
+              if [ $(grep -cx $fictoedit temp) != 0 ] # Cela veut dire que l'utilisateur a écrit un nom qui existait 
+              then 
+                  continuer=false
+              else
+                   echo "Ce fichier n'existe pas, réessayer s'il vous plait"
+              fi 
+          done
    fi
-   rm -f temp
 elif [ $# -eq 1 ] # Sinon sil y a exactement un argument
-then # on regarde si l'argument fini par .cpp ou .cc
-   if true
+then # on regarde si le nom du fichier est présent dans temp
+   if  [ $(grep -cx $1 temp) = 1 ] # si il y est
    then
-      echo "Le test est bon"
+      fictoedit=$1
+      echo "Le fichier" $fictoedit "est présent !"
    else
-      echo "Il n'est pas bon"
+      echo "Fichier non présent"
    fi
 else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
    echo "il y a plus d'un argument"
