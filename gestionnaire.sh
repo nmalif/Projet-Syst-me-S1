@@ -9,6 +9,7 @@
 
 clear
 
+fictoedit=""
 
 if [ $# -eq 0 ] # Si il ny pas dargument
 then
@@ -18,8 +19,16 @@ then
       echo "Il n'y a pas de .cpp."
    else # sinon on les montre
       echo "Voici les fichiers sources c++ du répertoire :"
+      echo " "
       cat temp
+      echo " "
+      echo -n "Ecrire le nom du fichier source c++ à manipuler : "
+      while true
+         do
+           touch $0
+         done
    fi
+   rm -f temp
 
 else 
    echo "il y a des arguments"
