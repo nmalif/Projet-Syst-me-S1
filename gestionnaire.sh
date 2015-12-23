@@ -18,6 +18,7 @@ maketemplate()
     echo "}" >> template.cpp
 }
 
+
 # DEBUT INTRO
 
 clear
@@ -36,7 +37,6 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    else # sinon on les montre
       while $continuer
           do
-              clear
               echo "Voici les fichiers sources c++ du répertoire :"
               echo " "
               cat temp
@@ -44,23 +44,32 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
               echo -n "Ecrire le nom du fichier source c++ à manipuler : "
               # puis on demande a l'utilisateur decrire le nom du fichier quil veut manipuler
               read fictoedit
-              if [ $(grep -cx $fictoedit temp) != 0 ] # Cela veut dire que l'utilisateur a écrit un nom qui existait 
-              then 
+              if [ $(grep -cx $fictoedit temp) != 0 ] # Cela veut dire que l'utilisateur a écrit un nom qui existait
+              then
+                  echo " "
+                  echo -e "Vous avez choisi\033[31m" $fictoedit "\033[0mcomme fichier à manipuler"
                   continuer=false
+                  echo " "
               else
-                   echo "Ce fichier n'existe pas, réessayer s'il vous plait"
-              fi 
+                  clear
+                  echo "Ce fichier n'existe pas, réessayer s'il vous plait"
+                  echo " "
+              fi
           done
    fi
 elif [ $# -eq 1 ] # Sinon sil y a exactement un argument
-then # on regarde si le nom du fichier est présent dans temp
-   if  [ $(grep -cx $1 temp) = 1 ] # si il y est
+then
+   fictoedit=$1
+   echo -ne "Le fichier\033[31m" $fictoedit "\033[0m"
+   if  [ $(grep -cx $1 temp) = 1 ] # on regarde si le nom du fichier est présent dans temp, si oui
    then
-      fictoedit=$1
-      echo "Le fichier" $fictoedit "est présent !"
+      echo "est présent"
    else
-      echo "Fichier non présent"
+      echo "n'est pas présent"
+      touch $fictoedit.cpp
+      echo "Il a donc été crée !"
    fi
+   echo "Vous manipulez le fichier $fictoedit"
 else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
    echo "il y a plus d'un argument"
 fi
