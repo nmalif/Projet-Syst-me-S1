@@ -27,12 +27,12 @@ continuer=true
 
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
-   ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 | cut -d'.' -f 1 > temp
+   ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 | cut -d'.' -f 1 | tail -n +2 > temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
    then
       echo "Il n'y a pas de .cpp."
       echo "Template automatiquement crée !"
-      template
+      maketemplate
    else # sinon on les montre
       echo "Voici les fichiers sources c++ du répertoire :"
       echo " "
