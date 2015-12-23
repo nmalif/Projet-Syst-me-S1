@@ -10,6 +10,7 @@
 clear
 
 fictoedit=""
+continuer=true
 
 if [ $# -eq 0 ] # Si il ny pas dargument
 then
@@ -23,9 +24,15 @@ then
       cat temp
       echo " "
       echo -n "Ecrire le nom du fichier source c++ à manipuler : "
-      while true
+      while $continuer
          do
-           touch $0
+            read fictoedit
+            if [ $(grep -cx $fictoedit temp) != 0 ] # Cela veut dire que l'utilisateur a écrit un nom qui existait 
+            then 
+               continuer=false
+            else
+               echo "Ce fichier n'existe pas, réessayer s'il vous plait"
+            fi 
          done
    fi
    rm -f temp
