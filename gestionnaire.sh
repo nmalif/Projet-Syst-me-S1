@@ -26,18 +26,20 @@ fictoedit=""
 continuer=true
 
 if [ $# -eq 0 ] # Si il ny pas dargument
-then
-   ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 > temp
-   if [ $(wc -l temp |cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
+then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
+   ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 | cut -d'.' -f 1 > temp
+   if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
    then
       echo "Il n'y a pas de .cpp."
+      echo "Template automatiquement crée !"
+      template
    else # sinon on les montre
       echo "Voici les fichiers sources c++ du répertoire :"
       echo " "
       cat temp
       echo " "
       echo -n "Ecrire le nom du fichier source c++ à manipuler : "
-      # puis on demande a lutilisateur decrire le nom du fichier quil veut manipuler
+      # puis on demande a l'utilisateur decrire le nom du fichier quil veut manipuler
       while $continuer
          do
             read fictoedit
@@ -50,20 +52,21 @@ then
          done
    fi
    rm -f temp
-
-else 
-   echo "il y a des arguments"
+elif [ $# -eq 1 ] # Sinon sil y a exactement un argument
+then # on regarde si l'argument fini par .cpp ou .cc
+   if true
+   then
+      echo "Le test est bon"
+   else
+      echo "Il n'est pas bon"
+   fi
+else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
+   echo "il y a plus d'un argument"
 fi
 
 ## $# est le nombre de paramètres passés au script
 
 
- 
-# Sinon sil y a un argument
-#     on regarde si l'argument fini par .cpp.
-
-# Sinon (dans ce cas là il y a plus d'un argument)
-#    il y a erreur car il y a plusieurs fichiers sélectionnés !
 
 
 # Si c'est le  cas, MENU
@@ -96,3 +99,4 @@ fi
 # quitter : 
 
 # FIN FEATURES
+
