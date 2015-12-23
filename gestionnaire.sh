@@ -24,16 +24,31 @@ maketemplate()
 clear
 
 fictoedit=""
-continuer=true
+continuer=true # un simple booléen
+reponse=""
+
 
 ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 | cut -d'.' -f 1 | tail -n +2 > temp
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
    then
-      echo "Il n'y a pas de .cpp."
-      echo "Template automatiquement crée !"
+      echo "Il n'y a pas de .cpp..."
+      echo "... un template a été automatiquement crée !"
       maketemplate
+      while $continuer
+          do
+              echo -n "Donnez lui un nom : "
+              read fictoedit
+              echo "Êtes-vous sûr ?"
+              read reponse
+              if [ $reponse = 'oui' ]
+              then
+                  continuer=false
+              fi
+          done 
+      continuer=true
+      mv template.cpp $fictoedit.cpp
    else # sinon on les montre
       while $continuer
           do
@@ -56,7 +71,8 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
                   echo " "
               fi
           done
-   fi
+       continuer=true
+    fi
 elif [ $# -eq 1 ] # Sinon sil y a exactement un argument
 then
    fictoedit=$1
@@ -69,18 +85,15 @@ then
       touch $fictoedit.cpp
       echo "Il a donc été crée !"
    fi
-   echo "Vous manipulez le fichier $fictoedit"
+   echo -e "Vous manipulez le fichier \033[31m$fictoedit\033[0m"
 else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
-   echo "il y a plus d'un argument"
+   echo "il y a plus d'un argument, le script s'arrête"
+   exit 1
 fi
 
+rm -f temp 
+
 ## $# est le nombre de paramètres passés au script
-
-
-
-
-# Si c'est le  cas, MENU
-# Sinon, dire qu'il y a erreur et redemander un nom correcte de fichier .cpp
 
 # FIN INTRO
 
