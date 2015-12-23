@@ -10,11 +10,17 @@
 clear
 
 
-# Si il ny pas dargument, on fait un ls des .cpp du répertoir
-
-if [ $# -eq 0 ]
+if [ $# -eq 0 ] # Si il ny pas dargument
 then
-   ls -l | tail -n +2 | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 
+   ls -l | egrep \(*.cpp$\|*.cc$\) | cut -d' ' -f 13 > temp
+   if [ $(wc -l temp |cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
+   then
+      echo "Il n'y a pas de .cpp."
+   else # sinon on les montre
+      echo "Voici les fichiers sources c++ du répertoire :"
+      cat temp
+   fi
+
 else 
    echo "il y a des arguments"
 fi
