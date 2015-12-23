@@ -2,13 +2,22 @@
 
 # DEBUT INTRO
 
-# Si il y a un argument, on regarde si l'argument fini par .cpp.
+clear
+
+# Si il ny dargument, on fait un ls des .cpp du répertoir
+#     Si il y a des .cpp
+#         on demande à lutilisateur decrire le nom du fichier .cpp.
+#     Sinon (sil ny a pas de .cpp après ce ls, on utilise le TEMPLATE)
+ 
+# Sinon sil y a un argument
+#     on regarde si l'argument fini par .cpp.
+
+# Sinon (dans ce cas là il y a plus d'un argument)
+#    il y a erreur car il y a plusieurs fichiers sélectionnés !
+
+
 # Si c'est le  cas, MENU
 # Sinon, dire qu'il y a erreur et redemander un nom correcte de fichier .cpp
-
-# Sinon sil n'y en a pas, on fait un ls des .cpp du répertoire, si il y a des 
-# .cpp, on demander à lutilisateur decrire le nom du fichier.
-# Sinon (sil ny a pas de .cpp après le ls, on utilise le TEMPLATE)
 
 # FIN INTRO
 
@@ -22,7 +31,7 @@
 
 # On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
 
-# FIN MENY
+# FIN MENU
 
 # DEBUT FEATURES
 
