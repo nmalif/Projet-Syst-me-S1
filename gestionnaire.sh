@@ -1,11 +1,13 @@
  #!/bin/bash
 
-#### CODE : un # est un commentaire normal
-####        deux # est une note
+#### PROJET SYSTEME : DEVELOPPEMENT D'UN IDE POUR C++
+#### by Le-Ho et Malifarge
+
+# note : je pense qu'on va utilisé whiptail au lieu de dialog pour une interface graphique
+# pour des raisons de portabilité
 
 maketemplate()
-{  
-    touch template.cpp 
+{ 
     echo "#include <iostream>" > template.cpp
     echo "#include <cstdlib>" >> template.cpp
     echo " " >> template.cpp
@@ -18,17 +20,56 @@ maketemplate()
     echo "}" >> template.cpp
 }
 
+listtomenu()
+{
+    if test tomenu
+    then
+        rm -f tomenu
+    fi 
+    local i=0
+    while read fichier
+    do
+       let i++
+       echo -n \"$i\" >> tomenu
+       echo -n " " >> tomenu
+       printf "%s\n" "\"$fichier\" \\" >> tomenu
+    done < temp
+    sed -i '$ s/.$/3>\&2 1>\&2 2>\&3)/' "tomenu"
+}
+
+makemenuscript()
+{
+    local nbfic
+    let nbfic=$(wc -l tomenu | cut -d' ' -f 1)
+    
+    cat $0 | head -n 1 > menu.sh
+    chmod 700 menu.sh
+    echo 'fictoedit=$(whiptail --title "Voici les fichiers sources c++ du répertoire" --menu "Chosissez un fichier"' 0 100 $nbfic "\\" >> menu.sh
+    cat tomenu >> menu.sh
+    echo "if [ \$? = 0 ]" >> menu.sh
+    echo "then" >> menu.sh
+    echo "    echo \$fictoedit" >> menu.sh
+    echo "else" >> menu.sh
+    echo "    echo \"Cancel\"" >> menu.sh
+    echo "fi" >> menu.sh 
+}
 
 # DEBUT INTRO
 
-clear
-
+# VARIABLES
 fictoedit=""
 continuer=true # un simple booléen
 reponse=""
+var=$(cat tomenu)
+# FIN VARIABLES
 
 
-ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" > temp
+whiptail --title "Bienvenue !" --msgbox "Ceci est un outil d'aide à la programmation en C++, développé par Nathan Malifarge et Viet-Khang Le Ho, pour le projet Système S1." 8 100
+
+
+clear
+ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp # tous les fichiers sources c++ dans un fichier, ligne par ligne, sans extension
+
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
@@ -49,30 +90,12 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
           done 
       continuer=true
       mv template.cpp $fictoedit.cpp
+      echo $fictoedit > temp
    else # sinon on les montre
-      while $continuer
-          do
-              echo "Voici les fichiers sources c++ du répertoire :"
-              echo " "
-              cat temp
-              echo " "
-              echo -n "Ecrire le nom du fichier source c++ à manipuler : "
-              # puis on demande a l'utilisateur decrire le nom du fichier quil veut manipuler
-              read fictoedit
-              if [ $(grep -cx $fictoedit temp) != 0 ] # Cela veut dire que l'utilisateur a écrit un nom qui existait
-              then
-                  echo " "
-                  echo -e "Vous avez choisi\033[31m" $fictoedit "\033[0mcomme fichier à manipuler"
-                  continuer=false
-                  echo " "
-              else
-                  clear
-                  echo "Ce fichier n'existe pas, réessayer s'il vous plait"
-                  echo " "
-              fi
-          done
-       continuer=true
-    fi
+      listtomenu
+      makemenuscript
+      menu.sh
+   fi
 elif [ $# -eq 1 ] # Sinon sil y a exactement un argument
 then
    fictoedit=$1
@@ -92,12 +115,11 @@ else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y 
 fi
 
 #rm -f temp 
-
-## $# est le nombre de paramètres passés au script
-
 # FIN INTRO
 
 # DEBUT MENU
+
+
 
 # un truc genre --> voir : 0
 #                   éditer : 1
