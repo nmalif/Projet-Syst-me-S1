@@ -6,6 +6,8 @@
 # note : je pense qu'on va utilisé whiptail au lieu de dialog pour une interface graphique
 # pour des raisons de portabilité
 
+## FONCTIONS
+
 maketemplate()
 {
     echo "#include <iostream>" > template.cpp
@@ -20,13 +22,22 @@ maketemplate()
     echo "}" >> template.cpp
 }
 
-listtomenu()
+makefileslist()
+{
+    ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp # tous les fichiers sources c++ dans un fichier, ligne par ligne, sans extension
+}
+
+# Ce fichier temp est important pour le reste du script
+
+
+listtomenu() # fabrique une partie du code source du menu.sh, en fait on veut faire ce script en fonction du nombre de fichiers .cpp présents, ainsi que leur nom
 {
     if test tomenu
     then
         rm -f tomenu
     fi
     local i=0
+
     while read fichier
     do
        let i++
@@ -34,10 +45,11 @@ listtomenu()
        echo -n " " >> tomenu
        printf "%s\n" "\"$fichier\" \\" >> tomenu
     done < temp
+
     sed -i '$ s/.$/3>\&2 1>\&2 2>\&3)/' "tomenu"
 }
 
-makemenuscript()
+makemenuscript() # écriture du script
 {
     local nbfic
     let nbfic=$(wc -l tomenu | cut -d' ' -f 1)
@@ -71,24 +83,26 @@ inputbox()
     fi
 }
 
+## FIN FONCTIONS
 
-# VARIABLES
+
+## VARIABLES
 fictoedit=""
 continuer=true # un simple booléen
 reponse=""
 var=$(cat tomenu)
-# FIN VARIABLES
+## FIN VARIABLES
 
 
-
+## PROLOGUE
 clear
+makefileslist
+## FIN PROLOGUE
 
-# DEBUT INTRO
+
+## DEBUT INTRO
 
 msgbox "Bienvenue !" "Ceci est un outil d'aide à la programmation en C++, développé par Nathan Malifarge et Viet-Khang Le Ho, pour le projet Système S1."
-
-ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp # tous les fichiers sources c++ dans un fichier, ligne par ligne, sans extension
-
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
@@ -125,12 +139,9 @@ fi
 
 rm -f temp
 
+## FIN INTRO
 
-# FIN INTRO
-
-# DEBUT MENU
-
-
+## DEBUT MENU
 
 # un truc genre --> voir : 0
 #                   éditer : 1
