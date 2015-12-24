@@ -22,6 +22,18 @@ maketemplate()
     echo "}" >> template.cpp
 }
 
+renommerfic()
+{
+    touch viet nathan # bonjour
+    echo $1 > viet
+    echo $2 > nathan
+    if [ $(cat viet | cut -d"." -f 1) != $(cat nathan | cut -d "." -f 1) ]
+    then
+        mv "$1" "$2"
+    fi
+    rm -f viet nathan # aurevoir
+}
+
 makefileslist()
 {
     ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp # tous les fichiers sources c++ dans un fichier, ligne par ligne, sans extension
@@ -71,21 +83,17 @@ msgbox()
     whiptail --title "$1" --msgbox "$2" 0 0
 }
 
+
 inputbox()
 {
-    nom=$(whiptail --title "$1" --inputbox "$2" --nocancel 0 0 template 3>&1 1>&2 2>&3)
-    if [ $? = 0 ]
-    then
-        mv template.cpp $nom.cpp
-        echo $nom >> temp
-    else
-        echo "cancel"
-    fi
+    local n=$(whiptail --title "$1" --inputbox "$2" --nocancel 0 0 "template" \
+    3>&1 1>&2 2>&3)
+    echo $n > input.dat 
 }
 
 editionmenu()
 {
-    choix=$(whiptail --title "Que faire avec $1 ?" --nocancel --menu "Veuillez choisir un outil :" 0 0 8 \
+    whiptail --title "Que faire avec $1 ?" --nocancel --menu "Veuillez choisir un outil :" 0 0 8 \
     "1." "Voir" \
     "2." "Editer" \
     "3." "Générer" \
@@ -93,31 +101,18 @@ editionmenu()
     "5." "Débugguer" \
     "6." "Imprimer" \
     "7." "Shell" \
-    "8." "Quitter" 3>&1 1>&2 2>&3)
-
-    if [ $? = 0 ]
-    then
-        echo "Vous avez choisi l'option :" $choix
-    else
-        echo "Cancel"
-    fi
+    "8." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > choix.dat
 }
 
 ## FIN FONCTIONS
 
-
-## VARIABLES
-fictoedit=""
-continuer=true # un simple booléen
-reponse=""
-var=$(cat tomenu)
-## FIN VARIABLES
 
 
 ## PROLOGUE
 clear
 makefileslist
 ## FIN PROLOGUE
+
 
 
 ## DEBUT INTRO
@@ -127,9 +122,10 @@ if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
    then
-      msgbox "Il n'y a pas de .cpp dans le répertoire courant" "... un template a été automatiquement crée !"
+      msgbox "Informations" "Il n'y a pas de .cpp dans le répertoire courant, un template a été automatiquement crée !"
       maketemplate
-      inputbox "Vous pouvez nommer le fichier" "Quel nom voulez-vous lui donner ?"
+      inputbox "Vous pouvez renommer le fichier" "Quel nom voulez-vous lui donner ?"
+      renommerfic template.cpp $(cat input.dat).cpp
    else # sinon on les montre
       listtomenu
       makemenuscript
@@ -149,7 +145,7 @@ then
    else
       msgbox "Informations" "Ce fichier n'est pas présent, il a donc été crée !"
       maketemplate
-      mv template.cpp $fictoedit.cpp
+      renommerfic template.cpp $fictoedit.cpp
    fi
    msgbox "Informations" "Vous allez manipulez le fichier $fictoedit."
 else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
