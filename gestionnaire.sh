@@ -56,7 +56,7 @@ makemenuscript() # écriture du script
 
     cat $0 | head -n 1 > menu.sh
     chmod 700 menu.sh
-    echo 'fictoedit=$(whiptail --title "Voici les fichiers sources c++ du répertoire" --menu "Chosissez un fichier"' 0 0 $nbfic "\\" >> menu.sh
+    echo 'fictoedit=$(whiptail --title "Voici les fichiers sources c++ du répertoire" --nocancel --menu "Chosissez un fichier"' 0 0 $nbfic "\\" >> menu.sh
     cat tomenu >> menu.sh
     echo "if [ \$? = 0 ]" >> menu.sh
     echo "then" >> menu.sh
@@ -73,13 +73,33 @@ msgbox()
 
 inputbox()
 {
-    nom=$(whiptail --title "$1" --inputbox "$2" 0 0 template 3>&1 1>&2 2>&3)
+    nom=$(whiptail --title "$1" --inputbox "$2" --nocancel 0 0 template 3>&1 1>&2 2>&3)
     if [ $? = 0 ]
     then
         mv template.cpp $nom.cpp
         echo $nom >> temp
     else
         echo "cancel"
+    fi
+}
+
+editionmenu()
+{
+    choix=$(whiptail --title "Que faire avec $1 ?" --nocancel --menu "Veuillez choisir un outil :" 0 0 8 \
+    "1." "Voir" \
+    "2." "Editer" \
+    "3." "Générer" \
+    "4." "Lancer" \
+    "5." "Débugguer" \
+    "6." "Imprimer" \
+    "7." "Shell" \
+    "8." "Quitter" 3>&1 1>&2 2>&3)
+
+    if [ $? = 0 ]
+    then
+        echo "Vous avez choisi l'option :" $choix
+    else
+        echo "Cancel"
     fi
 }
 
@@ -131,7 +151,7 @@ then
       maketemplate
       mv template.cpp $fictoedit.cpp
    fi
-   msgbox "Informations" "Vous manipulez le fichier $fictoedit."
+   msgbox "Informations" "Vous allez manipulez le fichier $fictoedit."
 else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
    msgbox "ERREUR FATALE" "Il y a plus d'un argument, le script va s'arrêter."
    exit 1
@@ -141,7 +161,10 @@ rm -f temp
 
 ## FIN INTRO
 
+
 ## DEBUT MENU
+
+editionmenu
 
 # un truc genre --> voir : 0
 #                   éditer : 1
@@ -151,7 +174,7 @@ rm -f temp
 
 # On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
 
-# FIN MENU
+## FIN MENU
 
 # DEBUT FEATURES
 
