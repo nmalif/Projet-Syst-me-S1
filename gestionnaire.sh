@@ -88,7 +88,7 @@ inputbox()
 {
     local n=$(whiptail --title "$1" --inputbox "$2" --nocancel 0 0 "template" \
     3>&1 1>&2 2>&3)
-    echo $n > input.dat 
+    echo $n > input.dat
 }
 
 editionmenu()
@@ -101,7 +101,49 @@ editionmenu()
     "5." "Débugguer" \
     "6." "Imprimer" \
     "7." "Shell" \
-    "8." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > choix.dat
+    "8." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
+}
+
+# Fonction FEATURES
+
+voir()
+{
+    echo "pas dispo"
+}
+
+editer()
+{
+    echo "pas dispo"
+}
+
+generer()
+{
+    echo "pas dispo"
+}
+
+lancer()
+{
+    echo "pas dispo"
+}
+
+debugguer()
+{
+    echo "pas dispo"
+}
+
+impreimer()
+{
+    echo "pas dispo"
+}
+
+shell()
+{
+    echo "pas dispo"
+}
+
+quitter()
+{
+    echo "pas dispo"
 }
 
 ## FIN FONCTIONS
@@ -153,7 +195,7 @@ else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y 
    exit 1
 fi
 
-rm -f temp
+rm -f temp *.dat
 
 ## FIN INTRO
 
@@ -161,6 +203,38 @@ rm -f temp
 ## DEBUT MENU
 
 editionmenu
+case $(cat edition.choix) in
+1)
+    voir
+    ;;
+2)
+    editer
+    ;;
+3)
+    generer
+    ;;
+4)
+    lancer
+    ;;
+5)
+    debugguer
+    ;;
+6)
+    imprimer
+    ;;
+7)
+    shell
+    ;;
+8)
+    quitter
+    ;;
+*)
+    echo "???? probleme case"
+    exit 1
+    ;;
+esac
+
+
 
 # un truc genre --> voir : 0
 #                   éditer : 1
