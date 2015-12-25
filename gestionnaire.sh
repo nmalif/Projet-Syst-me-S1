@@ -24,14 +24,14 @@ maketemplate()
 
 renommerfic()
 {
-    touch viet nathan # bonjour
-    echo $1 > viet
-    echo $2 > nathan
-    if [ $(cat viet | cut -d"." -f 1) != $(cat nathan | cut -d "." -f 1) ]
+    touch madeon porter # bonjour
+    echo $1 > madeon
+    echo $2 > porter
+    if [ $(cat madeon | cut -d"." -f 1) != $(cat porter | cut -d "." -f 1) ]
     then
         mv "$1" "$2"
     fi
-    rm -f viet nathan # aurevoir
+    rm -f madeon porter # aurevoir
 }
 
 makefileslist()
@@ -42,9 +42,9 @@ makefileslist()
 # Ce fichier temp est important pour le reste du script
 
 
-listtomenu() # fabrique une partie du code source du menu.sh, en fait on veut faire ce script en fonction du nombre de fichiers .cpp présents, ainsi que leur nom
+listtomenu() # fabrique une partie du code source de menu.sh, en fait on veut écrire un script en fonction du nombre de fichiers .cpp présents, ainsi que leur nom
 {
-    if test tomenu
+    if test -f tomenu
     then
         rm -f tomenu
     fi
@@ -116,28 +116,72 @@ editer()
 
 generer()
 {
+    g++ -c $fictoedit.cpp -o $fictoedit.o -Wall -Wextra -O3 -s 2> $fictoedit.stderr ## Compilation
   { for ((i = 0 ; i <= 100 ; i++))
     do
         echo $i
         sleep 0.02
     done
    } | whiptail --gauge "Veuillez patienter, je m'occupe de la compilation" 0 0 0
-
-    g++ $fictoedit.cpp -o $fictoedit.o -Wall -Wextra -O3 -s 2> $fictoedit.stderr
     if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
     then
         msgbox "Informations" "Compilation terminée avec succès"
     else
-        if (whiptail --title "Informations" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas bien effectuée" 0 0)
+        if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas bien effectuée" 0 0)
         then
             msgbox "Sortie d'erreur" "$(cat $fictoedit.stderr)"
         fi
     fi
+
+    msgbox "Informations" "Procédons à l'édition des liens"
+
+    g++ -o $fictoedit.exe $fictoedit.o 2> $fictoedit.stderr ## Edition de liens
+  { for ((i = 0 ; i <= 100 ; i++))
+    do
+        echo $i
+        echo 0.02
+    done
+   } | whiptail --gauge "Veuillez patienter, je génère l'exécutable" 0 0 0
+    if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
+    then
+        msgbox "Informations" "Génération terminée avec succès"
+    else
+        if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "Il a eu des problèmes à l'édition de liens" 0 0)
+        then
+            msgbox "Sortie d'erreur" "$(cat $fictoedit.stderr)"
+        fi
+    fi
+
+    rm -f $fictoedit.stderr
 }
 
 lancer()
 {
-    msgbox "" "pas dispo"
+    if test -f $fictoedit.exe
+    then
+        chmod 111 $fictoedit.exe
+        $fictoedit.exe 2> $fictoedit.stderr
+
+        echo
+        if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
+        then
+            echo "Le programme s'est bien exécuté"
+        else
+            cat $fictoedit.stderr
+        fi
+
+        echo "Saisir \"ok\" pour continuer"
+        ok="true"
+        while [ $ok != "ok" ]
+        do
+            read ok
+        done
+
+        clear
+        rm -f $fictoedit.stderr
+    else
+        msgbox "Attention !" "Il n'existe pas encore d'executable."
+    fi
 }
 
 debugguer()
@@ -145,7 +189,7 @@ debugguer()
     msgbox "" "pas dispo"
 }
 
-impreimer()
+imprimer()
 {
     msgbox "" "pas dispo"
 }
@@ -228,7 +272,7 @@ rm -f temp
 
 while $continuer
 do
-    editionmenu
+    editionmenu $fictoedit
     case $(cat edition.choix) in
     1)
         voir
