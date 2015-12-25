@@ -24,14 +24,14 @@ maketemplate()
 
 renommerfic()
 {
-    touch madeon porter # bonjour
+    touch madeon pixel_empire # <<
     echo $1 > madeon
-    echo $2 > porter
-    if [ $(cat madeon | cut -d"." -f 1) != $(cat porter | cut -d "." -f 1) ]
+    echo $2 > pixel_empire
+    if [ $(cat madeon | cut -d"." -f 1) != $(cat pixel_empire | cut -d "." -f 1) ]
     then
         mv "$1" "$2"
     fi
-    rm -f madeon porter # aurevoir
+    rm -f madeon pixel_empire # >>
 }
 
 makefileslist()
@@ -144,7 +144,7 @@ generer()
    } | whiptail --gauge "Veuillez patienter, je génère l'exécutable" 0 0 0
     if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
     then
-        msgbox "Informations" "Génération terminée avec succès"
+        msgbox "Informations" "Génération terminée."
     else
         if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "Il a eu des problèmes à l'édition de liens" 0 0)
         then
@@ -170,9 +170,9 @@ lancer()
             cat $fictoedit.stderr
         fi
 
-        echo "Saisir \"ok\" pour continuer"
+        echo "Appuyez sur \"Entrée\" pour continuer"
         ok="true"
-        while [ $ok != "ok" ]
+        while [ $ok != "" ]
         do
             read ok
         done
@@ -196,6 +196,7 @@ imprimer()
 
 shell()
 {
+    msgbox "Informations" "Vous allez passer en mode en mode Shell, pour revenir en mode affichage graphique, il faudra saisir \"exit\""
     chmod 700 shell.sh
     shell.sh $fictoedit
 }
@@ -226,7 +227,7 @@ continuer="true" # booléen-like pour les while
 
 ## DEBUT INTRO
 
-msgbox "Bienvenue !" "Ceci est un outil d'aide à la programmation en C++, développé par Nathan Malifarge et Viet-Khang Le Ho, pour le projet Système S1."
+msgbox "Bienvenue !" "Je suis un outil d'aide à la programmation en C++, développé dans le cadre du Projet Système par Viet-Khang et Nathan."
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE

@@ -148,8 +148,16 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
           do
               echo -n "Donnez lui un nom : "
               read fictoedit
+              if [ $fictoedit = "exit" ]
+              then
+                  exit 1
+              fi
               echo "Êtes-vous sûr ?"
               read reponse
+              if [ $reponse = "exit" ]
+              then
+                  exit 1
+              fi
               if [ $reponse = 'oui' ] || [ $reponse = 'Oui' ]
               then
                   continuer=false
@@ -167,16 +175,20 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
               echo -n "Ecrire le nom du fichier source c++ à manipuler : "
               # puis on demande a l'utilisateur decrire le nom du fichier quil veut manipuler
               read fictoedit
+              if [ $fictoedit = "exit" ]
+              then
+              	  exit 1
+              fi
               if [ $(grep -cx $fictoedit temp) != 0 ] # Cela veut dire que l'utilisateur a écrit un nom qui existait
               then
-                  echo " "
+                  echo
                   echo -e "Vous avez choisi\033[31m" $fictoedit "\033[0mcomme fichier à manipuler"
                   continuer=false
-                  echo " "
+                  echo
               else
                   clear
                   echo "Ce fichier n'existe pas, réessayer s'il vous plait"
-                  echo " "
+                  echo
               fi
           done
        continuer=true
@@ -218,27 +230,32 @@ continuer=true
         echo -e "- \033[31mV\033[0moir"
         echo -e "- Edit\033[31me\033[0mr"
         echo -e "- Géné\033[31mr\033[0m"
-        echo -e "- Lan\033[31mc\033[0m"
+        echo -e "- Lan\033[31mc\033[0mr"
         echo -e "- Débug\033[31mg\033[0mer"
         echo -e "- Im\033[31mp\033[0mrimer"
         echo -e "- Inter\033[31mf\033[0mace graphique"
         echo -e "- \033[31mQ\033[0muitter"
         echo
 
-        read reponse  
+        read reponse # On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
+        if [ $reponse = "exit" ]
+        then
+            clear
+            whiptail --title "Rebonjour" --msgbox "Ravi de vous revoir !" 0 0
+            exit 1
+        fi
    done
 
-# On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
 
 # FIN MENU
 
 # DEBUT FEATURES
 
 # voir : less
-# éditer : nano  
+# éditer : nano
 # générer : séparer compilation avec g++ -o et linkage puis chmod 700 l'exécutable
 # lancer : lance l'exécutable
-# débugguer : compiler le programme en mode débug 
+# débugguer : compiler le programme en mode début 
 # imprimer : transformer en pdf puis a2ps ou un print
 # shell :
 # envoyer par mail 
