@@ -58,24 +58,19 @@ listtomenu() # fabrique une partie du code source du menu.sh, en fait on veut fa
        printf "%s\n" "\"$fichier\" \\" >> tomenu
     done < temp
 
-    sed -i '$ s/.$/3>\&2 1>\&2 2>\&3)/' "tomenu"
+    echo "2> fictoedit.dat" >> tomenu
 }
 
 makemenuscript() # écriture du script
 {
     local nbfic
-    let nbfic=$(wc -l tomenu | cut -d' ' -f 1)
+    let nbfic=$(wc -l temp | cut -d' ' -f 1)
 
     cat $0 | head -n 1 > menu.sh
     chmod 700 menu.sh
-    echo 'fictoedit=$(whiptail --title "Voici les fichiers sources c++ du répertoire" --nocancel --menu "Chosissez un fichier"' 0 0 $nbfic "\\" >> menu.sh
+    echo 'whiptail --title "Voici les fichiers sources c++ du répertoire" --nocancel --menu "Chosissez un fichier"' 0 0 $nbfic "\\" >> menu.sh
     cat tomenu >> menu.sh
-    echo "if [ \$? = 0 ]" >> menu.sh
-    echo "then" >> menu.sh
-    echo "    echo \$fictoedit" >> menu.sh
-    echo "else" >> menu.sh
-    echo "    echo \"Cancel\"" >> menu.sh
-    echo "fi" >> menu.sh
+    echo "sed -i 's/.$//'" \"fictoedit.dat\" >> menu.sh
 }
 
 msgbox()
@@ -86,9 +81,9 @@ msgbox()
 
 inputbox()
 {
-    local n=$(whiptail --title "$1" --inputbox "$2" --nocancel 0 0 "template" \
+    input=$(whiptail --title "$1" --inputbox "$2" --nocancel 0 0 "template" \
     3>&1 1>&2 2>&3)
-    echo $n > input.dat
+    echo $input > input.dat
 }
 
 editionmenu()
@@ -108,7 +103,7 @@ editionmenu()
 
 voir()
 {
-    echo "pas dispo"
+    msgbox "Voici le contenu du fichier $fictoedit" "$(cat $fictoedit.cpp)"
 }
 
 editer()
@@ -155,7 +150,9 @@ clear
 makefileslist
 ## FIN PROLOGUE
 
-
+## VARIABLE
+fictoedit="" #nom du fichier a manipuler
+##
 
 ## DEBUT INTRO
 
@@ -168,11 +165,14 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
       maketemplate
       inputbox "Vous pouvez renommer le fichier" "Quel nom voulez-vous lui donner ?"
       renommerfic template.cpp $(cat input.dat).cpp
+      fictoedit=$(cat input.dat)
+      rm -f input.dat
    else # sinon on les montre
       listtomenu
       makemenuscript
       menu.sh
-      rm -f menu.sh tomenu
+      fictoedit=$(cat temp | head -n $(cat fictoedit.dat) | tail -n 1) # On prend la n ieme ligne du fichier temp, n étant égal à la sortie d'erreur du script menu.sh (optimisé, sans le .)
+      rm -f menu.sh tomenu fictoedit.dat
    fi
 elif [ $# -eq 1 ] # Sinon sil y a exactement un argument
 then
@@ -195,7 +195,7 @@ else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y 
    exit 1
 fi
 
-rm -f temp *.dat
+rm -f temp
 
 ## FIN INTRO
 
