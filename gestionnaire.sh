@@ -196,7 +196,8 @@ imprimer()
 
 shell()
 {
-    msgbox "" "pas dispo"
+    chmod 700 shell.sh
+    shell.sh $fictoedit
 }
 
 quitter()
@@ -320,14 +321,14 @@ rm -f edition.choix
 # DEBUT FEATURES
 
 # voir : less
-# éditer : nano  
+# éditer : nano
 # générer : séparer compilation avec g++ -o et linkage puis chmod 700 l'exécutable
 # lancer : lance l'exécutable
-# débugguer : compiler le programme en mode débug 
+# débugguer : compiler le programme en mode débug
 # imprimer : transformer en pdf puis a2ps ou un print
 # shell :
-# envoyer par mail 
-# quitter : 
+# envoyer par mail
+# quitter :
 
 # FIN FEATURES
 

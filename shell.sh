@@ -1,16 +1,15 @@
  #!/bin/bash
 
-#### CODE : un # est un commentaire normal
-####        deux # est une note
+#### version shell
 
 maketemplate()
-{  
-    touch template.cpp 
+{
+    touch template.cpp
     echo "#include <iostream>" > template.cpp
     echo "#include <cstdlib>" >> template.cpp
-    echo " " >> template.cpp
+    echo >> template.cpp
     echo "using namespace std;" >> template.cpp
-    echo " " >> template.cpp
+    echo >> template.cpp
     echo "int main(int argc, char *argv[])" >> template.cpp
     echo "{" >> template.cpp
     echo "    cout << \"Hello World !\" << endl;" >> template.cpp
@@ -18,6 +17,115 @@ maketemplate()
     echo "}" >> template.cpp
 }
 
+# Fonction features
+
+voir()
+{
+    echo
+}
+
+editer()
+{
+    nano -Kim $fictoedit.cpp
+}
+
+generer()
+{
+    g++ -c $fictoedit.cpp -o $fictoedit.o -Wall -Wextra -O3 -s 2> $fictoedit.stderr ## Compilation
+  { for ((i = 0 ; i <= 100 ; i++))
+    do
+        echo $i
+        sleep 0.02
+    done
+   } | whiptail --gauge "Veuillez patienter, je m'occupe de la compilation" 0 0 0
+    if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
+    then
+        msgbox "Informations" "Compilation terminée avec succès"
+    else
+        if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas bien effectuée" 0 0)
+        then
+            msgbox "Sortie d'erreur" "$(cat $fictoedit.stderr)"
+        fi
+    fi
+
+    msgbox "Informations" "Procédons à l'édition des liens"
+
+    g++ -o $fictoedit.exe $fictoedit.o 2> $fictoedit.stderr ## Edition de liens
+  { for ((i = 0 ; i <= 100 ; i++))
+    do
+        echo $i
+        echo 0.02
+    done
+   } | whiptail --gauge "Veuillez patienter, je génère l'exécutable" 0 0 0
+    if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
+    then
+        msgbox "Informations" "Génération terminée avec succès"
+    else
+        if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "Il a eu des problèmes à l'édition de liens" 0 0)
+        then
+            msgbox "Sortie d'erreur" "$(cat $fictoedit.stderr)"
+        fi
+    fi
+
+    rm -f $fictoedit.stderr
+}
+
+lancer()
+{
+    if test -f $fictoedit.exe
+    then
+        chmod 111 $fictoedit.exe
+        $fictoedit.exe 2> $fictoedit.stderr
+
+        echo
+        if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
+        then
+            echo "Le programme s'est bien exécuté"
+        else
+            cat $fictoedit.stderr
+        fi
+
+        echo "Saisir \"ok\" pour continuer"
+        ok="true"
+        while [ $ok != "ok" ]
+        do
+            read ok
+        done
+
+        clear
+        rm -f $fictoedit.stderr
+    else
+        msgbox "Attention !" "Il n'existe pas encore d'executable."
+    fi
+}
+
+debugguer()
+{
+    msgbox "" "pas dispo"
+}
+
+imprimer()
+{
+    msgbox "" "pas dispo"
+}
+
+shell()
+{
+    chmod 700 shell.sh
+    shell.sh $fictoedit
+}
+
+quitter()
+{
+  { for ((i = 0 ; i <= 100 ; i++))
+    do
+        echo $i
+        sleep 0.01
+    done
+   } | whiptail --gauge "Veuillez patienter, le client va fermer" 0 0 0
+}
+
+# FIN FONCTIONS
 
 # DEBUT INTRO
 
@@ -28,7 +136,7 @@ continuer=true # un simple booléen
 reponse=""
 
 
-ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" > temp
+ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
@@ -46,7 +154,7 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
               then
                   continuer=false
               fi
-          done 
+          done
       continuer=true
       mv template.cpp $fictoedit.cpp
    else # sinon on les montre
@@ -85,25 +193,40 @@ then
       touch $fictoedit.cpp
       echo "Il a donc été crée !"
    fi
-   echo -e "Vous manipulez le fichier \033[31m$fictoedit\033[0m"
 else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
    echo "il y a plus d'un argument, le script s'arrête"
    exit 1
 fi
 
-#rm -f temp 
-
-## $# est le nombre de paramètres passés au script
+rm -f temp
 
 # FIN INTRO
 
+reponse=""
+continuer=true
+
 # DEBUT MENU
 
-# un truc genre --> voir : 0
-#                   éditer : 1
-#                   générer : 2
-#                   lancer : 3
-#                   débugguer :  4 ETC
+    while $continuer
+    do
+        clear
+        echo -e "Vous manipulez le fichier \033[31m$fictoedit\033[0m"
+        echo "Que faire avec ?"
+        echo -e "Pour choisir, tapez le nom de la fonctionnalité, ou son raccourci écrit en \033[31mrouge\033[0m"
+        echo
+        echo
+        echo -e "- \033[31mV\033[0moir"
+        echo -e "- Edit\033[31me\033[0mr"
+        echo -e "- Géné\033[31mr\033[0m"
+        echo -e "- Lan\033[31mc\033[0m"
+        echo -e "- Débug\033[31mg\033[0mer"
+        echo -e "- Im\033[31mp\033[0mrimer"
+        echo -e "- Inter\033[31mf\033[0mace graphique"
+        echo -e "- \033[31mQ\033[0muitter"
+        echo
+
+        read reponse  
+   done
 
 # On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
 
@@ -122,4 +245,3 @@ fi
 # quitter : 
 
 # FIN FEATURES
-
