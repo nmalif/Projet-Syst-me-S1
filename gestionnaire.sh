@@ -108,7 +108,7 @@ voir()
 
 editer()
 {
-    echo "pas dispo"
+    nano $fictoedit.cpp
 }
 
 generer()
@@ -138,9 +138,14 @@ shell()
 
 quitter()
 {
-    echo "pas dispo"
+  { for ((i = 0 ; i <= 100 ; i++))
+    do
+        echo $i
+        sleep 0.01
+    done
+   } | whiptail --gauge "Veuillez patienter, le client va fermer" 0 0 0
+   msgbox "GNU GPL V3.0 License" "A bientôt !" 0 0 0
 }
-
 ## FIN FONCTIONS
 
 
