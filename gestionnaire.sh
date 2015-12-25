@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
 
 #### PROJET SYSTEME : DEVELOPPEMENT D'UN IDE POUR C++
 #### by Le-Ho et Malifarge
@@ -12,9 +12,9 @@ maketemplate()
 {
     echo "#include <iostream>" > template.cpp
     echo "#include <cstdlib>" >> template.cpp
-    echo " " >> template.cpp
+    echo >> template.cpp
     echo "using namespace std;" >> template.cpp
-    echo " " >> template.cpp
+    echo >> template.cpp
     echo "int main(int argc, char *argv[])" >> template.cpp
     echo "{" >> template.cpp
     echo "    cout << \"Hello World !\" << endl;" >> template.cpp
@@ -103,37 +103,56 @@ editionmenu()
 
 voir()
 {
-    msgbox "Voici le contenu du fichier $fictoedit" "$(cat $fictoedit.cpp)"
+   if (whiptail --title "Voici le contenu du fichier $fictoedit" --yes-button "Colorier" --no-button "Ok" --defaultno --yesno "$(cat $fictoedit.cpp)" 0 0)
+   then
+       nano -v $fictoedit.cpp
+   fi
 }
 
 editer()
 {
-    nano $fictoedit.cpp
+    nano -Kim $fictoedit.cpp
 }
 
 generer()
 {
-    echo "pas dispo"
+  { for ((i = 0 ; i <= 100 ; i++))
+    do
+        echo $i
+        sleep 0.02
+    done
+   } | whiptail --gauge "Veuillez patienter, je m'occupe de la compilation" 0 0 0
+
+    g++ $fictoedit.cpp -o $fictoedit.o -Wall -Wextra -O3 -s 2> $fictoedit.stderr
+    if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
+    then
+        msgbox "Informations" "Compilation terminée avec succès"
+    else
+        if (whiptail --title "Informations" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas bien effectuée" 0 0)
+        then
+            msgbox "Sortie d'erreur" "$(cat $fictoedit.stderr)"
+        fi
+    fi
 }
 
 lancer()
 {
-    echo "pas dispo"
+    msgbox "" "pas dispo"
 }
 
 debugguer()
 {
-    echo "pas dispo"
+    msgbox "" "pas dispo"
 }
 
 impreimer()
 {
-    echo "pas dispo"
+    msgbox "" "pas dispo"
 }
 
 shell()
 {
-    echo "pas dispo"
+    msgbox "" "pas dispo"
 }
 
 quitter()
@@ -156,7 +175,8 @@ makefileslist
 ## FIN PROLOGUE
 
 ## VARIABLE
-fictoedit="" #nom du fichier a manipuler
+fictoedit="" # nom du fichier a manipuler
+continuer="true" # booléen-like pour les while
 ##
 
 ## DEBUT INTRO
@@ -193,8 +213,7 @@ then
       msgbox "Informations" "Ce fichier n'est pas présent, il a donc été crée !"
       maketemplate
       renommerfic template.cpp $fictoedit.cpp
-   fi
-   msgbox "Informations" "Vous allez manipulez le fichier $fictoedit."
+    fi
 else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
    msgbox "ERREUR FATALE" "Il y a plus d'un argument, le script va s'arrêter."
    exit 1
@@ -207,39 +226,42 @@ rm -f temp
 
 ## DEBUT MENU
 
-editionmenu
-case $(cat edition.choix) in
-1)
-    voir
-    ;;
-2)
-    editer
-    ;;
-3)
-    generer
-    ;;
-4)
-    lancer
-    ;;
-5)
-    debugguer
-    ;;
-6)
-    imprimer
-    ;;
-7)
-    shell
-    ;;
-8)
-    quitter
-    ;;
-*)
-    echo "???? probleme case"
-    exit 1
-    ;;
-esac
-
-
+while $continuer
+do
+    editionmenu
+    case $(cat edition.choix) in
+    1)
+        voir
+        ;;
+    2)
+        editer
+        ;;
+    3)
+        generer
+        ;;
+    4)
+        lancer
+        ;;
+    5)
+        debugguer
+        ;;
+    6)
+        imprimer
+        ;;
+    7)
+        shell
+        ;;
+    8)
+        quitter
+        continuer="false"
+        ;;
+    *)
+        echo "???? probleme case"
+        exit 1
+        ;;
+    esac
+done
+rm -f edition.choix
 
 # un truc genre --> voir : 0
 #                   éditer : 1
