@@ -224,7 +224,13 @@ lancer()
 
 debugguer()
 {
-    msgbox "" "pas dispo"
+    if test -f debug_$fictoedit/$fictoedit.exe
+    then
+        msgbox "Informations" "Saisir \"quit\" pour revenir."
+        gdb debug_$fictoedit/$fictoedit.exe
+    else
+        msgbox "Attention !" "Il n'y a rien à débugguer ici, peut-être devriez-vous générer un éxécutatable en mode \"Debug\" ?"
+    fi
 }
 
 imprimer()
