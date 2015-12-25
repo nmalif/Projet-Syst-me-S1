@@ -195,9 +195,9 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
     fi
 elif [ $# -eq 1 ] # Sinon sil y a exactement un argument
 then
-   fictoedit=$1
+   fictoedit=$(echo $1 | cut -d'.' -f 1)
    echo -ne "Le fichier\033[31m" $fictoedit "\033[0m"
-   if  [ $(grep -cx $1 temp) = 1 ] # on regarde si le nom du fichier est présent dans temp, si oui
+   if  [ $(grep -cx $fictoedit temp) = 1 ] # on regarde si le nom du fichier est présent dans temp, si oui
    then
       echo "est présent"
    else
@@ -227,14 +227,14 @@ continuer=true
         echo -e "Pour choisir, tapez le nom de la fonctionnalité, ou son raccourci écrit en \033[31mrouge\033[0m"
         echo
         echo
-        echo -e "- \033[31mV\033[0moir"
-        echo -e "- Edit\033[31me\033[0mr"
-        echo -e "- Géné\033[31mr\033[0m"
-        echo -e "- Lan\033[31mc\033[0mr"
-        echo -e "- Débug\033[31mg\033[0mer"
-        echo -e "- Im\033[31mp\033[0mrimer"
-        echo -e "- Inter\033[31mf\033[0mace graphique"
-        echo -e "- \033[31mQ\033[0muitter"
+        echo -e "- \033[31mV\033[0moir" # m
+        echo -e "- Edit\033[31me\033[0mr" # e
+        echo -e "- Géné\033[31mr\033[0m" # r
+        echo -e "- Lan\033[31mc\033[0mer" # c
+        echo -e "- Débug\033[31mg\033[0mer" # g
+        echo -e "- Im\033[31mp\033[0mrimer" # p
+        echo -e "- Inter\033[31mf\033[0mace graphique" # f
+        echo -e "- \033[31mQ\033[0muitter" # q
         echo
 
         read reponse # On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
@@ -244,21 +244,41 @@ continuer=true
             whiptail --title "Rebonjour" --msgbox "Ravi de vous revoir !" 0 0
             exit 1
         fi
+
+        case $reponse in
+        $(echo $reponse | egrep ("m"|"M"))
+            echo "m"
+            ;;
+        [eE]*)
+            echo "e"
+            ;;
+        [rR]*)
+            echo "r"
+            ;;
+        [cC]*)
+            echo "c"
+            ;;
+        [gG]*)
+            echo "g"
+            ;;
+        [pP]*)
+            echo "p"
+            ;;
+        [fF]*)
+            echo "f"
+            ;;
+        [qQ]*)
+            echo "q"
+            ;;
+        *)
+            echo AHHH
+            exit 1
+            ;;
+        esac
+
+
    done
 
 
 # FIN MENU
 
-# DEBUT FEATURES
-
-# voir : less
-# éditer : nano
-# générer : séparer compilation avec g++ -o et linkage puis chmod 700 l'exécutable
-# lancer : lance l'exécutable
-# débugguer : compiler le programme en mode début 
-# imprimer : transformer en pdf puis a2ps ou un print
-# shell :
-# envoyer par mail 
-# quitter : 
-
-# FIN FEATURES
