@@ -36,7 +36,7 @@ renommerfic()
 
 makefileslist()
 {
-    ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp # tous les fichiers sources c++ dans un fichier, ligne par ligne, sans extension
+    ls -l | grep -v ^d | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp # tous les fichiers sources c++ dans un fichier, ligne par ligne, sans extension
 }
 
 # Ce fichier temp est important pour le reste du script

@@ -21,15 +21,7 @@ maketemplate()
 
 voir()
 {
-   if [ $(wc -c $fictoedit.$extension | cut -d' ' -f 1) = 0 ]
-   then
-       msgbox "Le fichier est vide" ""
-   else
-       if (whiptail --title "Voici le contenu du fichier $fictoedit" --yes-button "Colorier" --no-button "Ok" --defaultno --yesno "$(cat $fictoedit\.$extension)" 0 0)
-       then
-           nano -v $fictoedit.$extension
-       fi
-   fi
+    nano -v $fictoedit.$extension
 }
 
 editer()
@@ -39,62 +31,82 @@ editer()
 
 generer()
 {
-    if (whiptail --title "Mode de la compilation" --yes-button "Debug" --no-button "Release" --yesno "Debug : permet un débuggage plus facile (conseillé)\nRelease : réduit grandement le poids de l'éxécutable" 0 0)
-    then
-    	repertoire="debug_$fictoedit"
-	if ! test -r $repertoire/
-        then
-             mkdir $repertoire
-        fi
-        g++ -g -c $fictoedit.$extension -o $fictoedit.o -Wall -Wextra -pedantic -Wfloat-equal -Wconversion -Wshadow -Weffc++ -Wdouble-promotion -Winit-self -Wswitch-default -Wlogical-op -Wundef -Wswitch-enum 2> $repertoire/$fictoedit.stderr ## Compilation Debug
-    else
-    	repertoire="release_$fictoedit"
-	if ! test -r $repertoire/
-        then
-            mkdir $repertoire
-	fi
-	g++ -c $fictoedit.$extension -o $fictoedit.o -O3 -s 2> $repertoire/$fictoedit.stderr ## Compilation Release
-    fi
+    continuer="true"
+    local choix=""
+
+    while $continuer
+    do
+    	clear
+        echo "Choisir le mode de compilation"
+        echo "Debug --> permet un débuggage plus facile (conseillé)"
+        echo "Release --> réduit grandement le poids de l'éxécutable, l'optimise"
+	echo
+
+	echo -n "Votre réponse : "
+        read choix
+
+        case $choix in
+        [dD][eE][bB][uU][gG])
+        	continuer="false"
+    		repertoire="debug_$fictoedit"
+	  	if ! test -r $repertoire/
+       	        then
+           	  mkdir $repertoire
+       		fi
+        	g++ -g -c $fictoedit.$extension -o $fictoedit.o -Wall -Wextra -pedantic -Wfloat-equal -Wconversion -Wshadow -Weffc++ -Wdouble-promotion -Winit-self -Wswitch-default -Wlogical-op -Wundef -Wswitch-enum 2> $repertoire/$fictoedit.stderr ## Compilation Debug
+        	;;
+        [rR][eE][lL][eE][aA][sS][eE])
+        	continuer="false"
+    		repertoire="release_$fictoedit"
+		if ! test -r $repertoire/
+       		then
+                  mkdir $repertoire
+		fi
+		g++ -c $fictoedit.$extension -o $fictoedit.o -O3 -s 2> $repertoire/$fictoedit.stderr ## Compilation Release
+    		;;
+        *)
+        	;;
+	esac
+    done
 
     mv $fictoedit.o $repertoire/$fictoedit.o
 
-  { for ((i = 0 ; i <= 100 ; i++))
-    do
-        echo $i
-        sleep 0.02
-    done
-   } | whiptail --gauge "Veuillez patienter, je m'occupe de la compilation" 0 0 0
-
     if [ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ]
     then
-        msgbox "Informations" "Compilation terminée avec succès"
+        echo "Compilation terminée avec succès"
     else
-        if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas effectuée parfaitement" 0 0)
-        then
-            msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)"
-        fi
+    	echo
+        echo "La compilation ne s'est pas effectuée parfaitement"
+        sleep 2
+        echo
+        echo "Voici la sortie d'erreur"
+        sleep 1
+        cat $repertoire/$fictoedit.stderr | less
     fi
+
+    sleep 3
 
     if test -f $repertoire/$fictoedit.o
     then
-        msgbox "Informations" "Procédons à l'édition des liens"
+    	echo
+        echo "Procédons à l'édition des liens"
     fi
 
+    sleep 2
+
     g++ -o $repertoire/$fictoedit.exe $repertoire/$fictoedit.o 2> $repertoire/$fictoedit.stderr ## Edition de liens
-  { for ((i = 0 ; i <= 100 ; i++))
-    do
-        echo $i
-        echo 0.02
-    done
-   } | whiptail --gauge "Veuillez patienter, je génère l'exécutable" 0 0 0
     if [ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ]
     then
-        msgbox "Informations" "Génération terminée."
+    	echo
+        echo "Génération terminée."
     else
-        if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "Il a eu des problèmes à l'édition de liens" 0 0)
-        then
-            msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)"
-        fi
+    	echo
+        echo "Il a eu des problèmes à l'édition de liens"
+        sleep 2
+        echo
+        echo "Voici la sortie d'erreur"
+        sleep 1
+        cat $repertoire/$fictoedit.stder | less
     fi
 }
 
@@ -165,7 +177,7 @@ shell()
 
 quitter()
 {
-   msgbox "GNU GPL V3.0 License" "A très bientôt ! ^^"
+   exit 1
 }
 ## FIN FONCTIONS
 
@@ -178,7 +190,8 @@ continuer=true # un simple booléen
 reponse=""
 
 
-ls -l | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp
+ls -l | grep -v ^d | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp
+exit 1
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE
@@ -190,16 +203,8 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
           do
               echo -n "Donnez lui un nom : "
               read fictoedit
-              if [ $fictoedit = "exit" ]
-              then
-                  exit 1
-              fi
               echo "Êtes-vous sûr ?"
               read reponse
-              if [ $reponse = "exit" ]
-              then
-                  exit 1
-              fi
               if [ $reponse = 'oui' ] || [ $reponse = 'Oui' ]
               then
                   continuer=false
@@ -208,7 +213,7 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
       continuer=true
       mv template.cpp $fictoedit.cpp
    else # sinon on les montre
-      while $continuer
+       while $continuer
           do
               echo "Voici les fichiers sources c++ du répertoire :"
               echo " "
@@ -217,10 +222,6 @@ then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
               echo -n "Ecrire le nom du fichier source c++ à manipuler : "
               # puis on demande a l'utilisateur decrire le nom du fichier quil veut manipuler
               read fictoedit
-              if [ $fictoedit = "exit" ]
-              then
-              	  exit 1
-              fi
               if [ $(grep -cx $fictoedit temp) != 0 ] # Cela veut dire que l'utilisateur a écrit un nom qui existait
               then
                   echo
@@ -258,6 +259,7 @@ rm -f temp
 
 reponse=""
 continuer=true
+repertoire=""
 
 # DEBUT MENU
 
