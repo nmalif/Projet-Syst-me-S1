@@ -227,14 +227,13 @@ continuer=true
         echo -e "Pour choisir, tapez le nom de la fonctionnalité, ou son raccourci écrit en \033[31mrouge\033[0m"
         echo
         echo
-        echo -e "- \033[31mV\033[0moir" # m
+        echo -e "- \033[31mV\033[0moir" # v
         echo -e "- Edit\033[31me\033[0mr" # e
         echo -e "- Géné\033[31mr\033[0m" # r
         echo -e "- Lan\033[31mc\033[0mer" # c
         echo -e "- Débug\033[31mg\033[0mer" # g
         echo -e "- Im\033[31mp\033[0mrimer" # p
-        echo -e "- Inter\033[31mf\033[0mace graphique" # f
-        echo -e "- \033[31mQ\033[0muitter" # q
+        echo -e "- \033[31mQ\033[0muitter le script" # q
         echo
 
         read reponse # On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
@@ -246,29 +245,26 @@ continuer=true
         fi
 
         case $reponse in
-        $(echo $reponse | egrep ("m"|"M"))
-            echo "m"
+        "v")
+            voir
             ;;
-        [eE]*)
-            echo "e"
+        "e")
+            editer
             ;;
-        [rR]*)
-            echo "r"
+        "r")
+            generer
             ;;
-        [cC]*)
-            echo "c"
+        "c")
+            lancer
             ;;
-        [gG]*)
-            echo "g"
+        "g")
+            debugguer
             ;;
-        [pP]*)
-            echo "p"
+        "p")
+            imprimer
             ;;
-        [fF]*)
-            echo "f"
-            ;;
-        [qQ]*)
-            echo "q"
+        "q")
+            quitter
             ;;
         *)
             echo AHHH
