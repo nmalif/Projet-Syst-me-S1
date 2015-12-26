@@ -45,6 +45,11 @@ generer()
 	echo -n "Votre réponse : "
         read choix
 
+	if [ $choix = "quit" ]
+	then
+	    exit 1
+	fi
+
         case $choix in
         [dD][eE][bB][uU][gG])
         	continuer="false"
@@ -73,26 +78,25 @@ generer()
 
     if [ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ]
     then
-        echo "Compilation terminée avec succès"
+        echo  "Compilation terminée avec succès"
     else
     	echo
-        echo "La compilation ne s'est pas effectuée parfaitement"
-        sleep 2
+        echo -n "La compilation ne s'est pas effectuée parfaitement"
         echo
         echo "Voici la sortie d'erreur"
-        sleep 1
-        cat $repertoire/$fictoedit.stderr | less
+        sleep 0.5
+        cat $repertoire/$fictoedit.stderr
     fi
 
-    sleep 3
+    sleep 1
 
     if test -f $repertoire/$fictoedit.o
     then
     	echo
-        echo "Procédons à l'édition des liens"
+        echo "Edition des liens"
     fi
 
-    sleep 2
+    sleep 1
 
     g++ -o $repertoire/$fictoedit.exe $repertoire/$fictoedit.o 2> $repertoire/$fictoedit.stderr ## Edition de liens
     if [ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ]
@@ -106,7 +110,7 @@ generer()
         echo
         echo "Voici la sortie d'erreur"
         sleep 1
-        cat $repertoire/$fictoedit.stder | less
+        cat $repertoire/$fictoedit.stder
     fi
 }
 
@@ -124,7 +128,8 @@ lancer()
         exec="true"
         cd debug_$fictoedit/
     else
-        msgbox "Attention !" "Il n'existe pas encore d'executable."
+        echo "Attention !"
+	echo "Il n'existe pas encore d'executable."
     fi
 
     if $exec
@@ -156,23 +161,26 @@ debugguer()
 {
     if test -f debug_$fictoedit/$fictoedit.exe
     then
-        msgbox "Informations" "Saisir \"quit\" pour revenir."
-        gdb debug_$fictoedit/$fictoedit.exe
+        clear
+        echo "Saisir \"quit\" pour revenir."
+        echo "."
+	echo ".."
+	echo "..."
+	echo "Bon débuggage !"
+	echo "..."
+	echo ".."
+	echo ".."
+	echo "."
+	gdb debug_$fictoedit/$fictoedit.exe
     else
-        msgbox "Attention !" "Il n'y a rien à débugguer ici, peut-être devriez-vous générer un éxécutatable en mode \"Debug\" ?"
+        echo "Attention !"
+	echo "Il n'y a rien à débugguer ici, peut-être devriez-vous générer un éxécutatable en mode \"Debug\" ?"
     fi
 }
 
 imprimer()
 {
     msgbox "" "pas dispo"
-}
-
-shell()
-{
-    msgbox "Informations" "Vous allez passer en mode en mode Shell, pour revenir en mode affichage graphique, il faudra saisir \"exit\""
-    chmod 700 shell.sh
-    shell.sh $fictoedit
 }
 
 quitter()
@@ -188,7 +196,7 @@ clear
 fictoedit=""
 continuer=true # un simple booléen
 reponse=""
-
+extension="cpp" # par défault
 
 ls -l | grep -v ^d | egrep \(*.cpp$\|*.cc$\) | grep -o "[^ ]*$" | cut -d'.' -f 1 > temp
 
@@ -243,9 +251,14 @@ then
    if  [ $(grep -cx $fictoedit temp) = 1 ] # on regarde si le nom du fichier est présent dans temp, si oui
    then
       echo "est présent"
+      if test $fictoedit.cc
+      then
+          extension="cc"
+      fi
    else
       echo "n'est pas présent"
-      touch $fictoedit.cpp
+      maketemplate
+      mv template.cpp $fictoedit.cpp
       echo "Il a donc été crée !"
    fi
 else # Sinon (dans ce cas là il y a plus d'un argument) il y a erreur car il y a plusieurs fichiers sélectionnés !
@@ -273,9 +286,9 @@ repertoire=""
         echo
         echo -e "- \033[31mV\033[0moir" # v
         echo -e "- Edit\033[31me\033[0mr" # e
-        echo -e "- Géné\033[31mr\033[0m" # r
+        echo -e "- Gene\033[31mr\033[0mer" # r
         echo -e "- Lan\033[31mc\033[0mer" # c
-        echo -e "- Débug\033[31mg\033[0mer" # g
+        echo -e "- Debug\033[31mg\033[0muer" # g
         echo -e "- Im\033[31mp\033[0mrimer" # p
         echo -e "- \033[31mQ\033[0muitter le script" # q
         echo
@@ -295,7 +308,7 @@ repertoire=""
         [eE] | [eE][dD][iI][tT][eE][rR])
             editer
             ;;
-        [gG] | [gG][eE][nN][eE][rR][eE][rR])
+        [rR] | [gG][eE][nN][eE][rR][eE][rR])
             generer
             ;;
         [cC] | [lL][aA][nN][cC][eE][rR])
