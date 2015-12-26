@@ -3,8 +3,21 @@
 #### PROJET SYSTEME : DEVELOPPEMENT D'UN IDE POUR C++
 #### by Le-Ho et Malifarge
 
+## Note pour Malif :
+# J'ai beaucoup bossé sans toi, désolé ^^ mais je me suis dis quil fallait bien sy mettre
+# Du coup on a les principales fonctionnalités (VOIR TOUTES !! sauf imprimer mais c'est facile)
+# Il manque la gesion d'aide en mode Shell ou je ne sais quoi mais cest dans le sujet : -h
+# Il manque la gesion des processus, on veut mettre en pause l'interface graphique quand on passe en mode Shell
+# et voilà !
+# je go réviser les maths, à bientôt !
+
+
 # note : je pense qu'on va utilisé whiptail au lieu de dialog pour une interface graphique
 # pour des raisons de portabilité
+
+pid=$! # utile pour passer du mode graphique on mode Shell, si c'est le cas on met ce processus en pause
+
+## a faire ça marche pas chez moi
 
 ## FONCTIONS
 
@@ -241,13 +254,16 @@ imprimer()
 shell()
 {
     msgbox "Informations" "Vous allez passer en mode en mode Shell, pour revenir en mode affichage graphique, il faudra saisir \"exit\""
+
+    kill -19 $pid
+
     chmod 700 shell.sh
     shell.sh $fictoedit
 }
 
 quitter()
 {
-   msgbox "GNU GPL V3.0 License" "A très bientôt ! ^^"
+    msgbox "GNU GPL V3.0 License" "A très bientôt !"
 }
 ## FIN FONCTIONS
 
@@ -266,7 +282,7 @@ continuer="true" # booléen-like pour les while
 
 ## DEBUT INTRO
 
-msgbox "Bienvenue !" "Je suis un outil d'aide à la programmation en C++, développé dans le cadre du Projet Système par Viet-Khang et Nathan."
+msgbox "Bienvenue !" "Je suis un outil d'aide à la programmation en C++, développé par Viet-Khang Le Ho et Nathan Malifarge dans le cadre du projet Système du S1"
 if [ $# -eq 0 ] # Si il ny pas dargument
 then # alors on met le nom de tous les fichiers .cc et .cpp dans un fichier temp
    if [ $(wc -l temp | cut -d' ' -f 1) -eq 0 ] # sil ny a pas de .cpp ou .cc dans le repertoire alors on utilise le TEMPLATE

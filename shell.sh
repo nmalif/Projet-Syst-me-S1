@@ -290,7 +290,7 @@ repertoire=""
         echo -e "- Lan\033[31mc\033[0mer" # c
         echo -e "- Debug\033[31mg\033[0muer" # g
         echo -e "- Im\033[31mp\033[0mrimer" # p
-        echo -e "- \033[31mQ\033[0muitter le script" # q
+        echo -e "- \033[31mQ\033[0muitter le script (saisir \"q\" ou \"quitter\")" # q
         echo
 
         read reponse # On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
@@ -324,8 +324,6 @@ repertoire=""
             quitter
             ;;
         *)
-            echo AHHH
-            exit 1
             ;;
         esac
    done
