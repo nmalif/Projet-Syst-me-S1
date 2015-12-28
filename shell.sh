@@ -279,6 +279,7 @@ repertoire=""
     while $continuer
     do
         clear
+        ps
         echo -e "Vous manipulez le fichier \033[31m$fictoedit\033[0m"
         echo "Que faire avec ?"
         echo -e "Pour choisir, tapez le nom de la fonctionnalité, ou son raccourci écrit en \033[31mrouge\033[0m"

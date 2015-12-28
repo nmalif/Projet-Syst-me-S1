@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 #### PROJET SYSTEME : DEVELOPPEMENT D'UN IDE POUR C++
 #### by Le-Ho et Malifarge
@@ -15,11 +15,11 @@
 # note : je pense qu'on va utilisé whiptail au lieu de dialog pour une interface graphique
 # pour des raisons de portabilité
 
-pid=$! # utile pour passer du mode graphique on mode Shell, si c'est le cas on met ce processus en pause
 
 ## a faire ça marche pas chez moi
 
 ## FONCTIONS
+
 
 maketemplate()
 {
@@ -229,8 +229,6 @@ lancer()
         done
 
         clear
-        rm -f $fictoedit.stderr
-
         cd ..
     fi
 }
