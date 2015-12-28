@@ -213,7 +213,7 @@ lancer()
     if $exec
     then
         chmod 111 $fictoedit.exe
-        $fictoedit.exe 2> $fictoeditt.stderr
+        $fictoedit.exe 2> $fictoedit.stderr
         echo
         if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
         then
