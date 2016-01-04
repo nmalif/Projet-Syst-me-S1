@@ -248,6 +248,8 @@ debugguer()
 imprimer()
 {
   msgbox "" "pas dispo"
+  a2ps $fictoedit.$extension  -o $fictoedit.ps
+  ps2pdf $fictoedit.ps $fictoedit.pdf
 }
 
 shell()
