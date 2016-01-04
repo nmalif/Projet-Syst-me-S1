@@ -3,23 +3,14 @@
 #### PROJET SYSTEME : DEVELOPPEMENT D'UN IDE POUR C++
 #### by Le-Ho et Malifarge
 
-## Note pour Malif :
-# J'ai beaucoup bossé sans toi, désolé ^^ mais je me suis dis quil fallait bien sy mettre
-# Du coup on a les principales fonctionnalités (VOIR TOUTES !! sauf imprimer mais c'est facile)
-# Il manque la gesion d'aide en mode Shell ou je ne sais quoi mais cest dans le sujet : -h
-# Il manque la gesion des processus, on veut mettre en pause l'interface graphique quand on passe en mode Shell
-# et voilà !
-# je go réviser les maths, à bientôt !
-
-
-# note : je pense qu'on va utilisé whiptail au lieu de dialog pour une interface graphique
-# pour des raisons de portabilité
-
-
-## a faire ça marche pas chez moi
+# note : on va utilisé whiptail au lieu de dialog pour une interface graphique pour des raisons de portabilité
 
 ## FONCTIONS
 
+aide()
+{
+  msgbox "Aide" "Usage: gestionnaire.sh [fichier]\n[fichier] est un fichier C++ existant ou pas, donné sans extension.\nC'est un argument facultatif."
+}
 
 maketemplate()
 {
@@ -265,6 +256,8 @@ quitter()
 {
   msgbox "GNU GPL V3.0 License" "A très bientôt !"
 }
+
+
 ## FIN FONCTIONS
 
 
@@ -279,6 +272,14 @@ fictoedit="" # nom du fichier a manipuler
 extansion="" # cpp ou cc
 continuer="true" # booléen-like pour les while
 ##
+
+## DEBUT AIDE
+if [ $1 = "-h" ]
+  then
+  aide
+  exit 0
+fi
+## FIN AIDE
 
 ## DEBUT INTRO
 
