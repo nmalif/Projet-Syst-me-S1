@@ -240,7 +240,7 @@ imprimer()
 {
   a2ps $fictoedit.$extension  -o $fictoedit.ps
   ps2pdf $fictoedit.ps $fictoedit.pdf
-  msgbox "" "pas dispo"
+  msgbox "" "Un fichier pdf a bien été généré, voulez-vous le voir ?"
 }
 
 shell()
@@ -273,13 +273,6 @@ extansion="" # cpp ou cc
 continuer="true" # booléen-like pour les while
 ##
 
-## DEBUT AIDE
-if [ $1 = "-h" ]
-  then
-  aide
-  exit 0
-fi
-## FIN AIDE
 
 ## DEBUT INTRO
 
