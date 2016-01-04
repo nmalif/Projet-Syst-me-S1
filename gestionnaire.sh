@@ -239,6 +239,7 @@ debugguer()
     then
         msgbox "Informations" "Saisir \"quit\" pour revenir."
         gdb debug_$fictoedit/$fictoedit.exe
+	clear
     else
         msgbox "Attention !" "Il n'y a rien à débugguer ici, peut-être devriez-vous générer un éxécutatable en mode \"Debug\" ?"
     fi
