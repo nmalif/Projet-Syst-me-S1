@@ -238,7 +238,7 @@ debugguer()
 
 imprimer()
 {
-  a2ps $fictoedit.$extension  -o $fictoedit.ps
+  a2ps $fictoedit.$extension -o $fictoedit.ps
   ps2pdf $fictoedit.ps $fictoedit.pdf
   msgbox "" "Un fichier pdf a bien été généré, voulez-vous le voir ?"
 }
