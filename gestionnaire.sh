@@ -277,7 +277,7 @@ continuer="true" # booléen-like pour les while
 ## DEBUT
 
 ## AIDE
-if [ $1 = "--help" ] || [ $1 = "-h" ]
+if [[ $1 = "--help" || $1 = "-h" ]]
   then
   aide
   exit 0
