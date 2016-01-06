@@ -278,6 +278,17 @@ continuer="true" # booléen-like pour les while
 ##
 
 
+## DEBUT
+
+## AIDE
+if [ $1 = "--help" ] || [ $1 = "-h" ]
+  then
+  aide
+  exit 0
+fi
+## FIN AIDE
+
+
 ## DEBUT INTRO
 
 msgbox "Bienvenue !" "Je suis un outil d'aide à la programmation en C++, développé par Viet-Khang Le Ho et Nathan Malifarge dans le cadre du projet Système du S1"
