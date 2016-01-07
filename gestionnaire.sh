@@ -26,6 +26,28 @@ maketemplate()
   echo "}" >> template.cpp
 }
 
+makemakefile()
+{
+  echo 'CC = g++' > Makefile
+  echo 'CFLAGS = -W -Wall -g' >> Makefile
+  echo 'LDFLAGS =' >> Makefile
+  echo '' >> Makefile
+  echo 'SRC = $(wildcard *.cpp)' >> Makefile
+  echo 'OBJS = $(SRC:.cpp=.o)' >> Makefile
+  echo 'AOUT = prog' >> Makefile
+  echo '' >> Makefile
+  echo 'all : $(AOUT)' >> Makefile
+  echo '' >> Makefile
+  echo 'prog : $(OBJS)' >> Makefile
+  echo '$(CC) $(LDFLAGS) -o $@ $^' >> Makefile
+  echo '%.o : %.cpp' >> Makefile
+  echo '$(CC) $(CFLAGS) -o $@ -c $<' >> Makefile
+  echo 'clean :' >> Makefile
+  echo '@rm *.o' >> Makefile
+  echo 'cleaner : clean' >> Makefile
+  echo '@rm $(AOUT)' >> Makefile
+}
+
 renommerfic()
 {
   touch madeon pixel_empire # <<
@@ -240,7 +262,8 @@ imprimer()
 {
   a2ps -q $fictoedit.$extension -o $fictoedit.ps
   ps2pdf $fictoedit.ps $fictoedit.pdf
- 
+
+
   if (whiptail --title "Informations" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "Un fichier pdf a bien été généré, voulez-vous le voir ?" 0 0)
   then
   evince $fictoedit.pdf
@@ -401,5 +424,4 @@ rm -f edition.choix
 # shell :
 # envoyer par mail
 # quitter :
-
 # FIN FEATURES
