@@ -276,9 +276,8 @@ shell()
 {
   msgbox "Informations" "Vous allez passer en mode en mode Shell, pour revenir en mode affichage graphique, il faudra saisir \"exit\""
 
-
-  chmod 700 shell.sh
-  shell.sh $fictoedit
+  chmod 700 .shell.sh
+  .shell.sh $fictoedit
 }
 
 quitter()
@@ -427,3 +426,5 @@ rm -f edition.choix
 # envoyer par mail
 # quitter :
 # FIN FEATURES
+
+
