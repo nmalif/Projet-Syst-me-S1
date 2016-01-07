@@ -107,7 +107,7 @@ msgbox()
 
 inputbox()
 {
-  input=$(whiptail --title "$1" --inputbox "$2" --nocancel 0 0 "template" \
+  input=$(whiptail --title "$1" --inputbox "$2" --nocancel 0 0 "$3" \
   3>&1 1>&2 2>&3)
   echo $input > input.dat
 }
@@ -121,8 +121,9 @@ editionmenu()
   "4." "Lancer" \
   "5." "Débugguer" \
   "6." "Imprimer" \
-  "7." "Shell" \
-  "8." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
+  "7." "Mail" \
+  "8." "Shell" \
+  "9." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
 }
 
 # Fonction FEATURES
@@ -272,6 +273,22 @@ imprimer()
   fi
 }
 
+mail()
+{
+  local titre
+  local adresse
+
+  msgbox "Informations" "L'envoie concerne le fichier source."
+  inputbox "Envoie par mail" "Donner un titre à votre mail" "MonTitre"
+  titre=$(cat input.dat)
+  rm -f input.dat
+  inputbox "Envoie par mail" "Ecrire l'adresse mail" "popculture@exemple.fr"
+  adresse=$(cat input.dat)
+  rm -f input.dat
+  echo | mutt -s $titre -a $1 -- $adresse
+  msgbox "Informations" "Le mail a été envoyé, si le destinataire ne reçoit rien, il faut vérifier l'adresse fournie."
+}
+
 shell()
 {
   msgbox "Informations" "Vous allez passer en mode en mode Shell, pour revenir en mode affichage graphique, il faudra saisir \"exit\""
@@ -322,7 +339,7 @@ if [ $# -eq 0 ] # Si il ny pas dargument
     then
     msgbox "Informations" "Il n'y a pas de .cpp dans le répertoire courant, un template a été automatiquement crée !"
     maketemplate
-    inputbox "Vous pouvez renommer le fichier" "Quel nom voulez-vous lui donner ?"
+    inputbox "Vous pouvez renommer le fichier" "Quel nom voulez-vous lui donner ?" "template"
     renommerfic template.cpp $(cat input.dat).cpp
     fictoedit=$(cat input.dat)
     rm -f input.dat
@@ -390,9 +407,12 @@ do
     imprimer
     ;;
     7)
-    shell
+    mail $fictoedit.cpp
     ;;
     8)
+    shell
+    ;;
+    9)
     quitter
     continuer="false"
     ;;
@@ -426,5 +446,4 @@ rm -f edition.choix
 # envoyer par mail
 # quitter :
 # FIN FEATURES
-
 
