@@ -26,7 +26,7 @@ maketemplate()
   echo "}" >> template.cpp
 }
 
-makemakefile()
+makemakefile() ## Pas utilisé pour l'instant mais le sera pour le travail facultif
 {
   echo 'CC = g++' > Makefile
   echo 'CFLAGS = -W -Wall -g' >> Makefile
@@ -263,10 +263,10 @@ imprimer()
   a2ps -q $fictoedit.$extension -o $fictoedit.ps
   ps2pdf $fictoedit.ps $fictoedit.pdf
 
-
-  if (whiptail --title "Informations" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "Un fichier pdf a bien été généré, voulez-vous le voir ?" 0 0)
-  then
-  evince $fictoedit.pdf
+  if (whiptail --title "Informations" --yes-button "Allons-y" --no-button "Non merci" --defaultno --yesno "Un fichier pdf a bien été généré, voulez-vous le voir ?" 0 0)
+    then
+  msgbox "Informations" "Utilisez la souris pour parcourir votre fichier et ALT+F4 pour quitter"
+  evince -s $fictoedit.pdf
   fi
 }
 
