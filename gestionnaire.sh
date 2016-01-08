@@ -267,12 +267,12 @@ supprimer()
     if (whiptail --title "Attention !" --yes-button "Oui" --no-button "Non" --yesno "Voulez-vous vraiment supprimer le fichier $fictoedit ?" 0 0)
     then
     rm -rf $fictoedit.$extension debug_$fictoedit/ release_$fictoedit/
-    msgbox "Informations" "Le fichier a bien été supprimé"
-    if (whiptail --title "Information" --yes-button "quitter" --no-button "continuer" --yesno "Voulez-vous quitter ou sélectionner un autre fichier ?" 0 0)
-    then
+    msgbox "Informations" "Le fichier a bien été supprimé \n\nA très bientôt !"
+    #if (whiptail --title "Information" --yes-button "quitter" --no-button "continuer" --yesno "Voulez-vous quitter ou sélectionner un autre fichier ?" 0 0)
+    #then
     exit 0
-    msgbox "GNU GPL V3.0 License" "A très bientôt !"
-    fi
+    #msgbox "GNU GPL V3.0 License" "A très bientôt !"
+    #fi
     fi
 }
 
