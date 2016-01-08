@@ -118,10 +118,9 @@ editionmenu()
   "5." "Débugguer" \
   "6." "Imprimer" \
   "7." "Mail" \
-  "8." "Mode console" \
-  "9." "Shell" \
-  "10." "Supprimer" \
-  "11." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
+  "8." "Shell" \
+  "9." "Supprimer" \
+  "10." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
 }
 
 # Fonction FEATURES
@@ -383,10 +382,10 @@ do
     8)
     shell
     ;;
-    10)
+    9)
     supprimer
     ;;
-    11)
+    10)
     quitter
     continuer="false"
     ;;
@@ -399,26 +398,4 @@ done
 
 rm -f edition.choix
 
-# un truc genre --> voir : 0
-#                   éditer : 1
-#                   générer : 2
-#                   lancer : 3
-#                   débugguer :  4 ETC
 
-# On demande une réponse à l'utilisateur tant que sa réponse est incorrecte
-
-## FIN MENU
-
-# DEBUT FEATURES
-
-# voir : less
-# éditer : nano
-# générer : séparer compilation avec g++ -o et linkage puis chmod 700 l'exécutable
-# lancer : lance l'exécutable
-# débugguer : compiler le programme en mode débug
-# imprimer : transformer en pdf puis a2ps ou un print
-# shell :
-# envoyer par mail$*
-# supprimer : supprimer le fichier source et les dossiers debug/release associés
-# quitter :
-# FIN FEATURES
