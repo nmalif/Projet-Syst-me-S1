@@ -96,7 +96,7 @@ makemenuscript() # écriture du script
   chmod 700 menu.sh
   echo 'whiptail --title "Voici les fichiers sources c++ du répertoire" --nocancel --menu "Chosissez un fichier"' 0 0 $nbfic "\\" >> menu.sh
   cat tomenu >> menu.sh
-  echo "sed -i 's/.$//'" \"fictoedit.dat\" >> menu.sh
+  echo "sed -i 's/.$//'" \"fictoedit.dat\" >> menu.sh 
 }
 
 msgbox()
@@ -123,7 +123,8 @@ editionmenu()
   "6." "Imprimer" \
   "7." "Mail" \
   "8." "Shell" \
-  "9." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
+  "9." "supprimer" \
+  "10." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
 }
 
 # Fonction FEATURES
@@ -297,6 +298,15 @@ shell()
   .shell.sh $fictoedit
 }
 
+supprimer()
+{
+    if (whiptail --title "Attention !" --yes-button "Oui" --no-button "Non" --yesno "Voulez-vous vraiment supprimer le fichier $fictoedit ?" 0 0)
+    then
+    rm -f $fictoedit.$extension
+    msgbox "Informations" "Le fichier a bien été supprimé"
+    fi
+}
+
 quitter()
 {
   msgbox "GNU GPL V3.0 License" "A très bientôt !"
@@ -413,9 +423,12 @@ do
     shell
     ;;
     9)
+    supprimer
+    ;;
+    10)
     quitter
     continuer="false"
-    ;;
+    ;;   
     *)
     echo "???? probleme case"
     exit 1
