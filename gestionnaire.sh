@@ -388,7 +388,7 @@ do
     ;;
     11)
     quitter
-    cntinuer="false"
+    continuer="false"
     ;;
     *)
     echo "???? probleme case"
