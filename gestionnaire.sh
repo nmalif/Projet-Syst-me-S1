@@ -10,6 +10,7 @@
 aide()
 {
   msgbox "Aide" "Usage: gestionnaire.sh [fichier]\n[fichier] est un fichier C++ existant ou pas, donné sans extension.\nC'est un argument facultatif."
+  exit 0
 }
 
 maketemplate()
@@ -53,10 +54,7 @@ renommerfic()
   touch madeon pixel_empire # <<
   echo $1 > madeon
   echo $2 > pixel_empire
-  if [ $(cat madeon | cut -d"." -f 1) != $(cat pixel_empire | cut -d "." -f 1) ]
-    then
-    mv "$1" "$2"
-  fi
+  [ $(cat madeon | cut -d"." -f 1) != $(cat pixel_empire | cut -d "." -f 1) ] && mv "$1" "$2"
   rm -f madeon pixel_empire # >>
 }
 
@@ -70,10 +68,8 @@ makefileslist()
 
 listtomenu() # fabrique une partie du code source de menu.sh, en fait on veut écrire un script en fonction du nombre de fichiers .cpp présents, ainsi que leur nom
 {
-  if test -f tomenu
-    then
-    rm -f tomenu
-  fi
+  test -f tomenu && rm -f tomenu
+
   local i=0
 
   while read fichier
@@ -131,15 +127,8 @@ editionmenu()
 
 voir()
 {
-  if [ $(wc -c $fictoedit.$extension | cut -d' ' -f 1) = 0 ]
-    then
-    msgbox "Le fichier est vide" ""
-  else
-    if (whiptail --title "Voici le contenu du fichier $fictoedit" --yes-button "Colorier" --no-button "Ok" --defaultno --yesno "$(cat $fictoedit\.$extension)" 0 0)
-      then
-      nano -v $fictoedit.$extension
-    fi
-  fi
+  [ $(wc -c $fictoedit.$extension | cut -d' ' -f 1) = 0 ] && msgbox "Le fichier est vide" ""
+  [ $(wc -c $fictoedit.$extension | cut -d' ' -f 1) = 0 ] || (whiptail --title "Voici le contenu du fichier $fictoedit" --yes-button "Colorier" --no-button "Ok" --defaultno --yesno "$(cat $fictoedit\.$extension)" 0 0) && nano -v $fictoedit.$extension
 }
 
 editer()
@@ -152,20 +141,13 @@ generer()
   if (whiptail --title "Mode de la compilation" --yes-button "Debug" --no-button "Release" --yesno "Debug : permet un débuggage plus facile (conseillé)\nRelease : réduit grandement le poids de l'éxécutable" 0 0)
     then
     repertoire="debug_$fictoedit"
-    if ! test -r $repertoire/
-      then
-      mkdir $repertoire
-    fi
+    ! test -r $repertoire/ && mkdir $repertoire
     g++ -g -c $fictoedit.$extension -o $fictoedit.o -Wall -Wextra -pedantic -Wfloat-equal -Wconversion -Wshadow -Weffc++ -Wdouble-promotion -Winit-self -Wswitch-default -Wlogical-op -Wundef -Wswitch-enum 2> $repertoire/$fictoedit.stderr ## Compilation Debug
   else
     repertoire="release_$fictoedit"
-    if ! test -r $repertoire/
-      then
-      mkdir $repertoire
-    fi
+    ! test -r $repertoire/ && mkdir $repertoire
     g++ -c $fictoedit.$extension -o $fictoedit.o -O3 -s 2> $repertoire/$fictoedit.stderr ## Compilation Release
   fi
-
   mv $fictoedit.o $repertoire/$fictoedit.o
 
   { for ((i = 0 ; i <= 100 ; i++))
@@ -175,37 +157,22 @@ generer()
   done
 } | whiptail --gauge "Veuillez patienter, je m'occupe de la compilation" 0 0 0
 
-if [ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ]
-  then
-  msgbox "Informations" "Compilation terminée avec succès"
-else
-  if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas effectuée parfaitement" 0 0)
-    then
-    msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)"
-  fi
-fi
+[ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] && msgbox "Informations" "Compilation terminée avec succès"
+[ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] || (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas effectuée parfaitement" 0 0) && msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)"
 
-if test -f $repertoire/$fictoedit.o
-  then
-  msgbox "Informations" "Procédons à l'édition des liens"
-fi
+test -f $repertoire/$fictoedit.o && msgbox "Informations" "Procédons à l'édition des liens"
 
 g++ -o $repertoire/$fictoedit.exe $repertoire/$fictoedit.o 2> $repertoire/$fictoedit.stderr ## Edition de liens
+
 { for ((i = 0 ; i <= 100 ; i++))
 do
   echo $i
   echo 0.02
 done
 } | whiptail --gauge "Veuillez patienter, je génère l'exécutable" 0 0 0
-if [ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ]
-  then
-  msgbox "Informations" "Génération terminée."
-else
-  if (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "Il a eu des problèmes à l'édition de liens" 0 0)
-    then
-    msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)"
-  fi
-fi
+
+[ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] &&  msgbox "Informations" "Génération terminée."
+[ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] || ((whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "Il a eu des problèmes à l'édition de liens" 0 0) && msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)")
 }
 
 lancer()
@@ -230,12 +197,8 @@ lancer()
     chmod 111 $fictoedit.exe
     $fictoedit.exe 2> $fictoedit.stderr
     echo
-    if [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ]
-      then
-      echo "Le programme s'est bien exécuté"
-    else
-      cat $fictoedit.stderr
-    fi
+    [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ] && echo "Le programme s'est bien exécuté"
+    [ $(wc -c $fictoedit.stderr | cut -d' ' -f 1) = 0 ] || cat $fictoedit.stderr
 
     echo "Appuyez sur \"Entrée\" pour continuer"
     while [ $prog != "" ]
@@ -332,11 +295,7 @@ continuer="true" # booléen-like pour les while
 ## DEBUT
 
 ## AIDE
-if [[ $1 = "--help" || $1 = "-h" ]]
-  then
-  aide
-  exit 0
-fi
+[[ $1 = "--help" || $1 = "-h" || $1 = "--aide" ]] && aide
 ## FIN AIDE
 
 
@@ -384,12 +343,8 @@ rm -f temp
 
 ## FIN INTRO
 
-if test -f $fictoedit.cpp
-  then
-  extension="cpp"
-else
-  extension="cc"
-fi
+test -f $fictoedit.cpp && extension="cpp"
+test -f $fictoedit.cc && extension="cc"
 
 ## DEBUT MENU
 repertoire="."
@@ -435,6 +390,7 @@ do
     ;;
   esac
 done
+
 rm -f edition.choix
 
 # un truc genre --> voir : 0
@@ -459,4 +415,3 @@ rm -f edition.choix
 # envoyer par mail
 # quitter :
 # FIN FEATURES
-
