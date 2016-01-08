@@ -92,7 +92,7 @@ makemenuscript() # écriture du script
   chmod 700 menu.sh
   echo 'whiptail --title "Voici les fichiers sources c++ du répertoire" --nocancel --menu "Chosissez un fichier"' 0 0 $nbfic "\\" >> menu.sh
   cat tomenu >> menu.sh
-  echo "sed -i 's/.$//'" \"fictoedit.dat\" >> menu.sh 
+  echo "sed -i 's/.$//'" \"fictoedit.dat\" >> menu.sh
 }
 
 msgbox()
@@ -118,9 +118,10 @@ editionmenu()
   "5." "Débugguer" \
   "6." "Imprimer" \
   "7." "Mail" \
-  "8." "Shell" \
-  "9." "supprimer" \
-  "10." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
+  "8." "Mode console" \
+  "9." "Shell" \
+  "10." "Supprimer" \
+  "11." "Quitter" 3>&1 1>&2 2>&3 | cut -d'.' -f 1 > edition.choix
 }
 
 # Fonction FEATURES
@@ -158,7 +159,7 @@ generer()
 } | whiptail --gauge "Veuillez patienter, je m'occupe de la compilation" 0 0 0
 
 [ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] && msgbox "Informations" "Compilation terminée avec succès"
-[ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] || (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas effectuée parfaitement" 0 0) && msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)"
+[ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] || ((whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas effectuée parfaitement" 0 0) && msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)")
 
 test -f $repertoire/$fictoedit.o && msgbox "Informations" "Procédons à l'édition des liens"
 
@@ -382,13 +383,13 @@ do
     8)
     shell
     ;;
-    9)
+    10)
     supprimer
     ;;
-    10)
+    11)
     quitter
-    continuer="false"
-    ;;   
+    cntinuer="false"
+    ;;
     *)
     echo "???? probleme case"
     exit 1
