@@ -243,7 +243,7 @@ mail()
   local titre
   local adresse
 
-  msgbox "Informations" "L'envoie concerne le fichier source."
+  msgbox "Informations" "L'envoi concerne le fichier source."
   inputbox "Envoie par mail" "Donner un titre à votre mail" "MonTitre"
   titre=$(cat input.dat)
   rm -f input.dat
@@ -266,8 +266,9 @@ supprimer()
 {
     if (whiptail --title "Attention !" --yes-button "Oui" --no-button "Non" --yesno "Voulez-vous vraiment supprimer le fichier $fictoedit ?" 0 0)
     then
-    rm -f $fictoedit.$extension
-    msgbox "Informations" "Le fichier a bien été supprimé"
+    rm -rf $fictoedit.$extension debug_$fictoedit/
+    msgbox "Informations" "Le fichier a bien été supprimé \n\nA très bientôt !"
+    exit 0
     fi
 }
 
