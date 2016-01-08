@@ -159,7 +159,7 @@ generer()
 } | whiptail --gauge "Veuillez patienter, je m'occupe de la compilation" 0 0 0
 
 [ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] && msgbox "Informations" "Compilation terminée avec succès"
-[ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] || (whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas effectuée parfaitement" 0 0) && msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)"
+[ $(wc -c $repertoire/$fictoedit.stderr | cut -d' ' -f 1) = 0 ] || ((whiptail --title "Attention !" --yes-button "Voir" --no-button "Ignorer" --defaultno --yesno "La compilation ne s'est pas effectuée parfaitement" 0 0) && msgbox "Sortie d'erreur" "$(cat $repertoire/$fictoedit.stderr)")
 
 test -f $repertoire/$fictoedit.o && msgbox "Informations" "Procédons à l'édition des liens"
 
