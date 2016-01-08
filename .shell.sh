@@ -354,5 +354,5 @@ do
   esac
 done
 
-
+clear
 # FIN MENU
