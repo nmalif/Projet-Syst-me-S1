@@ -257,13 +257,24 @@ shell()
 {
   msgbox "Informations" "Vous allez passer en mode en mode Shell, pour revenir en mode affichage graphique, il faudra saisir \"exit\""
 
-  chmod 700 .shell.sh
-  .shell.sh $fictoedit
+xterm -s
+export PS1="\t: "
+
+case $TERM in
+    xterm*)
+        PS1="bash\\$ "
+        ;;
+    *)
+        PS1="bash\\$ "
+        ;;
+esac
+
+  
 }
 
 supprimer()
 {
-    if (whiptail --title "Attention !" --yes-button "Oui" --no-button "Non" --yesno "Voulez-vous vraiment supprimer le fichier $fictoedit ?" 0 0)
+    if (whiptail --title "Attention !" --yes-button "Oui" --no-button "Non" --yesno "Voulez-vous vraiment supprimer le fichier $fictoedit et tous ses répertoires associés ?" 0 0)
     then
     rm -rf $fictoedit.$extension debug_$fictoedit/ release_$fictoedit/
     msgbox "Informations" "Le fichier a bien été supprimé \n\nA très bientôt !"
