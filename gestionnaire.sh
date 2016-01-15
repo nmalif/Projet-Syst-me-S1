@@ -13,7 +13,7 @@ aide()
   exit 0
 }
 
-maketemplate()
+maketemplate() # Crée un template par défaut
 {
   echo "#include <iostream>" > template.cpp
   echo "#include <cstdlib>" >> template.cpp
@@ -27,7 +27,7 @@ maketemplate()
   echo "}" >> template.cpp
 }
 
-makemakefile() ## Pas utilisé pour l'instant mais le sera pour le travail facultif
+makemakefile() # 
 {
   echo 'CC = g++' > Makefile
   echo 'CFLAGS = -W -Wall -g' >> Makefile
@@ -216,7 +216,7 @@ debugguer()
   if test -f debug_$fictoedit/$fictoedit.exe
     then
     msgbox "Informations" "Saisir \"quit\" pour revenir."
-    gdb debug_$fictoedit/$fictoedit.exe
+    gdb debug_$fictoedit/$fictoedit.exe # Ouvre le client natif de débuggage linux
     clear
   else
     msgbox "Attention !" "Il n'y a rien à débugguer ici, peut-être devriez-vous générer un éxécutatable en mode \"Debug\" ?"
@@ -233,7 +233,7 @@ imprimer()
   msgbox "Informations" "Utilisez la souris pour parcourir votre fichier, CTRL+P pour l'imprimer et ALT+F4 pour quitter"
   evince -s $fictoedit.pdf
   clear
-  rm -f $fictoedit.ps* $fictoedit.pdf
+  rm -f $fictoedit.ps
   fi
 }
 
@@ -249,25 +249,16 @@ mail()
   inputbox "Envoie par mail" "Ecrire l'adresse mail" "popculture@exemple.fr"
   adresse=$(cat input.dat)
   rm -f input.dat
-  echo | mutt -s $titre -a $1 -- $adresse
+  echo | mutt -s $titre -a $1 -- $adresse # Envoi un mail avec le client mutt
   msgbox "Informations" "Le mail a été envoyé, si le destinataire ne reçoit rien, il faut vérifier l'adresse fournie."
 }
 
 shell()
 {
   msgbox "Informations" "Vous allez passer en mode en mode Shell, pour revenir en mode affichage graphique, il faudra saisir \"exit\""
+  export PS1="\t: " # Change le prompt actuel par la date
+  gnome-terminal -x gestionnaire.sh $fictoedit # Ouvre un autre terminal
 
-xterm -s
-export PS1="\t: "
-
-case $TERM in
-    xterm*)
-        PS1="bash\\$ "
-        ;;
-    *)
-        PS1="bash\\$ "
-        ;;
-esac
 
   
 }
@@ -277,12 +268,8 @@ supprimer()
     if (whiptail --title "Attention !" --yes-button "Oui" --no-button "Non" --yesno "Voulez-vous vraiment supprimer le fichier $fictoedit et tous ses répertoires associés ?" 0 0)
     then
     rm -rf $fictoedit.$extension debug_$fictoedit/ release_$fictoedit/
-    msgbox "Informations" "Le fichier a bien été supprimé \n\nA très bientôt !"
-    #if (whiptail --title "Information" --yes-button "quitter" --no-button "continuer" --yesno "Voulez-vous quitter ou sélectionner un autre fichier ?" 0 0)
-    #then
-    exit 0
-    #msgbox "GNU GPL V3.0 License" "A très bientôt !"
-    #fi
+    msgbox "Informations" "Le fichier a bien été supprimé \n\nA très bientôt !"  
+    exit 0 
     fi
 }
 
@@ -392,6 +379,7 @@ do
     ;;
     8)
     shell
+    continuer="false"
     ;;
     9)
     supprimer
@@ -408,5 +396,4 @@ do
 done
 
 rm -f edition.choix
-
 
