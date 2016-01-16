@@ -27,7 +27,7 @@ maketemplate() # Crée un template par défaut
   echo "}" >> template.cpp
 }
 
-makemakefile() # 
+makemakefile() # un makefile générique
 {
   echo 'CC = g++' > Makefile
   echo 'CFLAGS = -W -Wall -g' >> Makefile
@@ -256,11 +256,8 @@ mail()
 shell()
 {
   msgbox "Informations" "Vous allez passer en mode en mode Shell, pour revenir en mode affichage graphique, il faudra saisir \"exit\""
-  export PS1="\t: " # Change le prompt actuel par la date
-  gnome-terminal -x gestionnaire.sh $fictoedit # Ouvre un autre terminal
-
-
-  
+  gnome-terminal -x "shell.sh" &
+  clear
 }
 
 supprimer()
@@ -269,7 +266,8 @@ supprimer()
     then
     rm -rf $fictoedit.$extension debug_$fictoedit/ release_$fictoedit/
     msgbox "Informations" "Le fichier a bien été supprimé \n\nA très bientôt !"  
-    exit 0 
+    rm -f editio.choix
+    exit 0
     fi
 }
 
@@ -379,7 +377,6 @@ do
     ;;
     8)
     shell
-    continuer="false"
     ;;
     9)
     supprimer
